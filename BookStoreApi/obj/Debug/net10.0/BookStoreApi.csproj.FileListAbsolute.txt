@@ -204,3 +204,11 @@ D:\Projects\OnlineBookStore\BookstoreAPi\obj\Debug\net10.0\refint\BookStoreApi.d
 D:\Projects\OnlineBookStore\BookstoreAPi\obj\Debug\net10.0\BookStoreApi.pdb
 D:\Projects\OnlineBookStore\BookstoreAPi\obj\Debug\net10.0\BookStoreApi.genruntimeconfig.cache
 D:\Projects\OnlineBookStore\BookstoreAPi\obj\Debug\net10.0\ref\BookStoreApi.dll
+D:\Projects\OnlineBookStore\BookStoreAPi\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\Projects\OnlineBookStore\BookStoreAPi\bin\Debug\net10.0\Microsoft.IdentityModel.Abstractions.dll
+D:\Projects\OnlineBookStore\BookStoreAPi\bin\Debug\net10.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Projects\OnlineBookStore\BookStoreAPi\bin\Debug\net10.0\Microsoft.IdentityModel.Logging.dll
+D:\Projects\OnlineBookStore\BookStoreAPi\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.dll
+D:\Projects\OnlineBookStore\BookStoreAPi\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\Projects\OnlineBookStore\BookStoreAPi\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
+D:\Projects\OnlineBookStore\BookStoreAPi\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll
