@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Projects\\OnlineBookStore\\BookStoreAPi\\BookStoreApi.csproj": {}
+    "D:\\Projects\\OnlineBookStore\\BookStoreApi\\BookStoreApi.csproj": {}
   },
   "projects": {
-    "D:\\Projects\\OnlineBookStore\\BookStoreAPi\\BookStoreApi.csproj": {
+    "D:\\Projects\\OnlineBookStore\\BookStoreApi\\BookStoreApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Projects\\OnlineBookStore\\BookStoreAPi\\BookStoreApi.csproj",
+        "projectUniqueName": "D:\\Projects\\OnlineBookStore\\BookStoreApi\\BookStoreApi.csproj",
         "projectName": "BookStoreApi",
-        "projectPath": "D:\\Projects\\OnlineBookStore\\BookStoreAPi\\BookStoreApi.csproj",
+        "projectPath": "D:\\Projects\\OnlineBookStore\\BookStoreApi\\BookStoreApi.csproj",
         "packagesPath": "C:\\Users\\moham\\.nuget\\packages\\",
-        "outputPath": "D:\\Projects\\OnlineBookStore\\BookStoreAPi\\obj\\",
+        "outputPath": "D:\\Projects\\OnlineBookStore\\BookStoreApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\MicrosoftPackages\\installer\\NuGetPackages"

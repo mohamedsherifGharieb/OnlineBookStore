@@ -6,20 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreApi.Controllers
 {
-    public class UsersController : BaseApiController
+    public class UsersController(AppDbContext context) : BaseApiController
     {
-        private readonly AppDbContext _context;
-
-        public UsersController(AppDbContext context)
-        {
-            _context = context;
-        }
-
+        
         // GET: api/users
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<AppUser>>> GetUsers()
         {
-            return await _context.Users.AsNoTracking().ToListAsync();
+            return await context.Users.AsNoTracking().ToListAsync();
         }
 
         // GET: api/users/{id}
@@ -27,7 +21,7 @@ namespace BookStoreApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<AppUser>> GetUser(string id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await context.Users.FindAsync(id);
 
             if (user == null)
                 return NotFound();
@@ -39,9 +33,9 @@ namespace BookStoreApi.Controllers
         [HttpPost]
         public async Task<ActionResult<AppUser>> CreateUser(AppUser newUser)
         {
-            _context.Users.Add(newUser);
+            context.Users.Add(newUser);
             
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -54,7 +48,7 @@ namespace BookStoreApi.Controllers
             if (id != updatedUser.Id)
                 return BadRequest("ID mismatch");
 
-            var user = await _context.Users.FindAsync(id);
+            var user = await context.Users.FindAsync(id);
             if (user == null)
                 return NotFound();
 
@@ -62,7 +56,7 @@ namespace BookStoreApi.Controllers
             user.DisplayName = updatedUser.DisplayName;
             user.Email = updatedUser.Email;
 
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
             return NoContent();
         }
 
@@ -71,12 +65,12 @@ namespace BookStoreApi.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await context.Users.FindAsync(id);
             if (user == null)
                 return NotFound();
 
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            context.Users.Remove(user);
+            await context.SaveChangesAsync();
 
             return NoContent();
         }

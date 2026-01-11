@@ -10,5 +10,8 @@ namespace BookStoreApi.Data
         {
         }
         public DbSet<AppUser> Users { get; set; }
+        public DbSet<EBook> Books { get; set; }
+
+        
     }
 }
