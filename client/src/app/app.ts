@@ -17,4 +17,17 @@ export class App implements OnInit {
 
 
   protected readonly title = signal('client');
+   async ngOnInit(): Promise<void> {
+    this.members.set(await this.getMembers());
+  }
+
+  async getMembers(){
+    try {
+      return lastValueFrom(this.http.get('https://localhost:5002/api/members'));
+      }
+    catch(error){
+      console.log(error);
+      throw error;
+    }
+
 }
