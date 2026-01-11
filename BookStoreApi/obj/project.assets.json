@@ -3288,7 +3288,8 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Sherif\\.nuget\\packages\\": {}
+    "C:\\Users\\moham\\.nuget\\packages\\": {},
+    "D:\\MicrosoftPackages\\installer\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
@@ -3296,16 +3297,22 @@
       "projectUniqueName": "D:\\Projects\\OnlineBookStore\\BookStoreApi\\BookStoreApi.csproj",
       "projectName": "BookStoreApi",
       "projectPath": "D:\\Projects\\OnlineBookStore\\BookStoreApi\\BookStoreApi.csproj",
-      "packagesPath": "C:\\Users\\Sherif\\.nuget\\packages\\",
+      "packagesPath": "C:\\Users\\moham\\.nuget\\packages\\",
       "outputPath": "D:\\Projects\\OnlineBookStore\\BookStoreApi\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "D:\\MicrosoftPackages\\installer\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Sherif\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\moham\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

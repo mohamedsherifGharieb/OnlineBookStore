@@ -3,7 +3,7 @@ using System;
 namespace BookStoreApi.Entities;
 
 public class OrderItem
-{
+{ /*
         public Guid Id { get; set; }
         public Guid BookId { get; set; }
         public Guid OrderId { get; set; }
@@ -13,5 +13,5 @@ public class OrderItem
         // Navigation properties
         public EBook? Book { get; set; }
         public Order? Order { get; set; }
-    
+ */   
 }

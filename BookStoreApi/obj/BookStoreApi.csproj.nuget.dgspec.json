@@ -1,25 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Projects\\OnlineBookStore\\BookStoreApi\\BookStoreApi.csproj": {}
+    "D:\\Projects\\OnlineBookStore\\BookstoreAPi\\BookStoreApi.csproj": {}
   },
   "projects": {
-    "D:\\Projects\\OnlineBookStore\\BookStoreApi\\BookStoreApi.csproj": {
+    "D:\\Projects\\OnlineBookStore\\BookstoreAPi\\BookStoreApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Projects\\OnlineBookStore\\BookStoreApi\\BookStoreApi.csproj",
+        "projectUniqueName": "D:\\Projects\\OnlineBookStore\\BookstoreAPi\\BookStoreApi.csproj",
         "projectName": "BookStoreApi",
-        "projectPath": "D:\\Projects\\OnlineBookStore\\BookStoreApi\\BookStoreApi.csproj",
-        "packagesPath": "C:\\Users\\Sherif\\.nuget\\packages\\",
-        "outputPath": "D:\\Projects\\OnlineBookStore\\BookStoreApi\\obj\\",
+        "projectPath": "D:\\Projects\\OnlineBookStore\\BookstoreAPi\\BookStoreApi.csproj",
+        "packagesPath": "C:\\Users\\moham\\.nuget\\packages\\",
+        "outputPath": "D:\\Projects\\OnlineBookStore\\BookstoreAPi\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\MicrosoftPackages\\installer\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Sherif\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\moham\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace BookStoreApi.Entities;
 
 public class Order
-{        public Guid Id { get; set; }
+{/*        public Guid Id { get; set; }
         public string Status { get; set; } = "Pending"; // "Pending", "Completed", "Cancelled"
         public float TotalPrice { get; set; }
         public Guid BuyerId { get; set; } // Customer who placed the order
@@ -16,5 +16,5 @@ public class Order
         public AppUser? Buyer { get; set; } // Customer
         public Store? Store { get; set; } // Store handling the order
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>(); // Items in this order
-    
+ */   
 }
