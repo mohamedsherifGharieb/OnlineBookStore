@@ -66,7 +66,7 @@ public class EBookController(AppDbContext _context) : BaseApiController
 
     // 5️⃣ GET: api/ebooks/user/{storeId} => books owned by a store/user
     [HttpGet("user/{storeId}")]
-    public async Task<ActionResult<IReadOnlyList<EBook>>> GetUserOwnedBooks(Guid storeId)
+    public async Task<ActionResult<IReadOnlyList<EBook>>> GetUserOwnedBooks(string storeId)
     {
         var books = await _context.Books
             .Where(b => b.StoreId.Equals(storeId))
