@@ -4,17 +4,29 @@ using System.Collections.Generic;
 namespace BookStoreApi.Entities;
 
 public class Order
-{/*        public Guid Id { get; set; }
-        public string Status { get; set; } = "Pending"; // "Pending", "Completed", "Cancelled"
-        public float TotalPrice { get; set; }
-        public Guid BuyerId { get; set; } // Customer who placed the order
-        public Guid StoreId { get; set; } // Store where order was placed
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+{
+    public string Id { get; set; } = string.Empty;
+    public required string BuyerProfileId { get; set; } // FK to BuyerProfile (not AppUser directly)
+    public required string StoreId { get; set; } // FK to Store
+    public decimal TotalAmount { get; set; } 
+    public OrderStatus Status { get; set; } = OrderStatus.Pending;
+    public DateTime OrderDate { get; set; } = DateTime.UtcNow;
+    public DateTime? CompletedDate { get; set; }
+    public DateTime? CancelledDate { get; set; }
+    public string? ShippingAddress { get; set; }
 
-        // Navigation properties
-        public AppUser? Buyer { get; set; } // Customer
-        public Store? Store { get; set; } // Store handling the order
-        public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>(); // Items in this order
- */   
+    // Navigation properties
+    public BuyerProfile Buyer { get; set; } = null!; 
+    public Store Store { get; set; } = null!;
+    public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+}
+
+public enum OrderStatus
+{
+    Pending = 1,
+    Processing = 2,
+    Shipped = 3,
+    Delivered = 4,
+    Cancelled = 5,
+    Refunded = 6
 }

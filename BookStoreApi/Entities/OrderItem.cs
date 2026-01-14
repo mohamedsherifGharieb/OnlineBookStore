@@ -3,15 +3,15 @@ using System;
 namespace BookStoreApi.Entities;
 
 public class OrderItem
-{ /*
-        public Guid Id { get; set; }
-        public Guid BookId { get; set; }
-        public Guid OrderId { get; set; }
-        public int Quantity { get; set; } // Number of copies purchased
-        public float PriceAtPurchase { get; set; } // Price at the time of purchase
+{
+    public string Id { get; set; } = string.Empty;
+    public required string OrderId { get; set; } // FK to Order
+    public required string EBookId { get; set; } // FK to EBook 
+    public int Quantity { get; set; }
+    public decimal UnitPrice { get; set; } 
+    public decimal Subtotal { get; set; } // Quantity * UnitPrice (calculated field)
 
-        // Navigation properties
-        public EBook? Book { get; set; }
-        public Order? Order { get; set; }
- */   
+    // Navigation properties
+    public Order Order { get; set; } = null!;
+    public EBook EBook { get; set; } = null!; 
 }

@@ -1,61 +1,115 @@
 using System.Security.Cryptography;
+using System.Text;
 using BookStoreApi.Data;
 using BookStoreApi.DTOS;
 using BookStoreApi.Entities;
-using BookStoreApi.Extensions;
 using BookStoreApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace BookStoreApi.Controllers
 {
-    public class AccountController(AppDbContext context,ITokenService tokenService) : BaseApiController
+    public class AccountController(AppDbContext _context, ITokenService _tokenService) : BaseApiController
     {
+        // =====================================
+        // REGISTER
+        // =====================================
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
-            if (await UserExists(registerDto.Email)) return BadRequest("Email is taken");
+            if (await UserExists(registerDto.Email))
+                return BadRequest("Email is taken");
 
-            var hmac = new HMACSHA512(); // generates random key
+            using var hmac = new HMACSHA512();
 
             var user = new AppUser
             {
+                Id = Guid.NewGuid().ToString(),
                 DisplayName = registerDto.DisplayName,
-                Email = registerDto.Email,
-                PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(registerDto.Password)),// hash password with key
-                PasswordSalt = hmac.Key // store key
+                Email = registerDto.Email.Trim().ToLower(),
+                Role = registerDto.Role,
+                PasswordHash = hmac.ComputeHash(
+                    Encoding.UTF8.GetBytes(registerDto.Password)),
+                PasswordSalt = hmac.Key
             };
 
-            context.Users.Add(user); // add the user  
-            await context.SaveChangesAsync();   // save the changes
+            // ---------------------------------
+            // Create profile (Shared PK)
+            // ---------------------------------
+            if (user.Role == UserRole.Buyer)
+            {
+                user.BuyerProfile = new BuyerProfile
+                {
+                    Id = user.Id
+                };
+            }
+            else if (user.Role == UserRole.StoreOwner)
+            {
+                user.StoreOwnerProfile = new StoreOwnerProfile
+                {
+                    Id = user.Id
+                };
+            }
+            else
+            {
+                return BadRequest("Invalid user role");
+            }
 
-        return user.ToUserDto(tokenService);            
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return new UserDto
+            {
+                Id = user.Id,
+                Email = user.Email,
+                DisplayName = user.DisplayName,
+                Image = user.ImageUrl,
+                Token = _tokenService.CreateToken(user)
+            };
         }
 
-        private async Task<bool> UserExists(string email)
-        {
-            return await context.Users.AnyAsync(x => x.Email.ToLower() == email.ToLower());
-        }
+        // =====================================
+        // LOGIN
+        // =====================================
         [HttpPost("login")]
-        public async Task<ActionResult<UserDto>> Login([FromBody] LoginDto loginDto)
+        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
-            var user = await context.Users.SingleOrDefaultAsync(x => x.Email.ToLower() == loginDto.Email.ToLower());
-            if (user == null) return Unauthorized("Invalid email");
+            var user = await _context.Users
+                .Include(u => u.BuyerProfile)
+                .Include(u => u.StoreOwnerProfile)
+                .SingleOrDefaultAsync(u =>
+                    u.Email == loginDto.Email.Trim().ToLower());
 
+            if (user == null)
+                return Unauthorized("Invalid email");
 
-
-            using var hmac = new HMACSHA512(user.PasswordSalt); // use the stored key
-
-            var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(loginDto.Password));
+            using var hmac = new HMACSHA512(user.PasswordSalt);
+            var computedHash = hmac.ComputeHash(
+                Encoding.UTF8.GetBytes(loginDto.Password));
 
             for (int i = 0; i < computedHash.Length; i++)
             {
-                if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid password");
+                if (computedHash[i] != user.PasswordHash[i])
+                    return Unauthorized("Invalid password");
             }
 
-        return user.ToUserDto(tokenService);            
+            return new UserDto
+            {
+                Id = user.Id,
+                Email = user.Email,
+                DisplayName = user.DisplayName,
+                Image = user.ImageUrl,
+                Token = _tokenService.CreateToken(user)
+            };
         }
 
+        // =====================================
+        // HELPERS
+        // =====================================
+        private async Task<bool> UserExists(string email)
+        {
+            return await _context.Users
+                .AnyAsync(u => u.Email == email.Trim().ToLower());
+        }
     }
 }

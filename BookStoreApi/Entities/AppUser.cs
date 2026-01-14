@@ -3,19 +3,22 @@ using System;
 namespace BookStoreApi.Entities;
 
 public class AppUser
-    {
-        public string Id { get; set; } = Guid.NewGuid().ToString();
-        public string? DisplayName { get; set; }
-        public required string Email { get; set; } 
-
-        public required byte[]? PasswordHash { get; set; }
-        public required byte[]? PasswordSalt { get; set; }
-        
-        public string? ImageUrl { get; set; }
-       /* public string? RefreshToken { get; set; }
-        public DateTime? RefreshTokenExpiry { get; set; }
-
-        // Navigation properties
-        public Store? OwnedStore { get; set; } // One-to-One: User can own only ONE store
-        public ICollection<Order> Orders { get; set; } = new List<Order>(); // Orders as buyer */
-    }
+{
+    public string Id { get; set; } = string.Empty;
+    public required string Email { get; set; }
+    public required byte[] PasswordHash { get; set; }
+    public required byte[] PasswordSalt { get; set; }
+    public required string DisplayName { get; set; }
+    public string? ImageUrl { get; set; }
+    public required UserRole Role { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    
+    // Composition - only one will be populated
+    public StoreOwnerProfile? StoreOwnerProfile { get; set; }
+    public BuyerProfile? BuyerProfile { get; set; }
+}
+public enum UserRole
+{
+    Buyer = 1,
+    StoreOwner = 2
+}
