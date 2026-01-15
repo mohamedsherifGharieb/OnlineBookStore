@@ -53,7 +53,7 @@ namespace BookStoreApi.Controllers
             foreach (var item in dto.Items)
             {
                 var ebook = await _context.Books.FindAsync(item.EBookId);
-                
+
                 if (ebook == null)
                     return NotFound($"EBook with ID {item.EBookId} not found");
 
@@ -74,7 +74,7 @@ namespace BookStoreApi.Controllers
                 };
 
                 totalAmount += orderItem.Subtotal;
-                
+
                 // Reduce stock
                 ebook.StockQuantity -= item.Quantity;
 
@@ -252,49 +252,34 @@ namespace BookStoreApi.Controllers
             if (order == null)
                 return NotFound("Order not found");
 
-            var isBuyer = order.BuyerProfileId == userId;
+            // Only store owner can update status
             var isStoreOwner = await _context.Stores
                 .AnyAsync(s => s.Id == order.StoreId && s.StoreOwnerProfileId == userId);
 
-            if (!isBuyer && !isStoreOwner)
-                return Forbid();
+            if (!isStoreOwner)
+                return Forbid("Only store owners can update order status");
 
             // Parse status
             if (!Enum.TryParse<OrderStatus>(dto.Status, true, out var newStatus))
                 return BadRequest("Invalid order status");
 
-            // Buyer can only cancel pending orders
-            if (isBuyer && newStatus != OrderStatus.Cancelled)
-                return BadRequest("Buyers can only cancel orders");
+            // Store owner cannot cancel - only progress forward
+            if (newStatus == OrderStatus.Cancelled)
+                return BadRequest("Use DELETE endpoint to cancel orders");
 
-            if (isBuyer && order.Status != OrderStatus.Pending)
-                return BadRequest("Only pending orders can be cancelled");
-
-            // Store owner cannot cancel, only update to Processing/Shipped/Delivered
-            if (isStoreOwner && newStatus == OrderStatus.Cancelled)
-                return BadRequest("Store owners cannot cancel orders");
+            // Validate status progression (optional but recommended)
+            if (newStatus == OrderStatus.Pending)
+                return BadRequest("Cannot revert order to Pending");
 
             order.Status = newStatus;
 
             if (newStatus == OrderStatus.Delivered)
                 order.CompletedDate = DateTime.UtcNow;
 
-            if (newStatus == OrderStatus.Cancelled)
-            {
-                order.CancelledDate = DateTime.UtcNow;
-                
-                // Restore stock
-                foreach (var item in order.OrderItems)
-                {
-                    item.EBook.StockQuantity += item.Quantity;
-                }
-            }
-
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
-
         // =====================================
         // DELETE: api/order/{id}
         // Cancel order (Buyer only, Pending orders only)
