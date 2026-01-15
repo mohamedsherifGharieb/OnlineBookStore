@@ -2,6 +2,9 @@ using System;
 
 namespace BookStoreApi.DTOS;
 
+    // =====================================
+    // OrderDto - Response for GET orders
+    // =====================================
 public class OrderDto
 {
         public string Id { get; set; } = string.Empty;

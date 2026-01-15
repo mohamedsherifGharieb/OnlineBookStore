@@ -2,14 +2,18 @@ using System;
 
 namespace BookStoreApi.DTOS;
 
+
     // =====================================
-    // BuyerProfileDto - Response for GET profile
+    // StoreOwnerProfileDto - Response for GET profile
     // =====================================
-public class BuyerProfileDto
+public class StoreOwnerProfileDto
 {
         public string Id { get; set; } = string.Empty;
         public string DisplayName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public string? ShippingAddress { get; set; }
-        public string? PhoneNumber { get; set; }
+        public string? BusinessName { get; set; }
+        public string? TaxId { get; set; }
+        public string? StoreId { get; set; }
+        public string? StoreName { get; set; }
+
 }

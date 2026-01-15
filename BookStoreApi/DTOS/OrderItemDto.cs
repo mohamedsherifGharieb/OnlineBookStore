@@ -2,6 +2,9 @@ using System;
 
 namespace BookStoreApi.DTOS;
 
+    // =====================================
+    // OrderItemDto - Order items inside OrderDto
+    // =====================================
 public class OrderItemDto
 {
         public string EBookId { get; set; } = string.Empty;
