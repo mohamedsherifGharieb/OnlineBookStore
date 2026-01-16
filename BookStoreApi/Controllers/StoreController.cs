@@ -52,7 +52,7 @@ namespace BookStoreApi.Controllers
                 Description = store.Description,
                 CreatedAt = store.CreatedAt,
                 TotalBooks = store.Books.Count,
-                Books = store.Books.Select(b => new EBookDto
+                Books = store.Books.Select(b => new EBookWithStoreDto
                 {
                     Id = b.Id,
                     Title = b.Title,
@@ -71,7 +71,7 @@ namespace BookStoreApi.Controllers
         // Get all books in a specific store
         // =====================================
         [HttpGet("{id}/books")]
-        public async Task<ActionResult<IReadOnlyList<EBookDto>>> GetStoreBooks(string id)
+        public async Task<ActionResult<IReadOnlyList<EBookWithStoreDto>>> GetStoreBooks(string id)
         {
             if (!Guid.TryParse(id, out _))
                 return BadRequest("Invalid store ID format");
@@ -85,7 +85,7 @@ namespace BookStoreApi.Controllers
                 .Where(b => b.StoreId == id)
                 .ToListAsync();
 
-            return Ok(books.Select(b => new EBookDto
+            return Ok(books.Select(b => new EBookWithStoreDto
             {
                 Id = b.Id,
                 Title = b.Title,

@@ -17,4 +17,28 @@ public static class AppUserExtensions
             Token = tokenService.CreateToken(user)
         };
     }
+  public static BuyerProfileDto ToBuyerProfileDto(this AppUser user, BuyerProfile profile)
+    {
+        return new BuyerProfileDto
+        {
+            Id = profile.Id,
+            DisplayName = user.DisplayName,
+            Email = user.Email,
+            ShippingAddress = profile.ShippingAddress,
+            PhoneNumber = profile.PhoneNumber
+        };
+    }
+    public static StoreOwnerProfileDto ToStoreOwnerProfileDto(this AppUser user, StoreOwnerProfile profile)
+    {
+        return new StoreOwnerProfileDto
+        {
+            Id = profile.Id,
+            DisplayName = user.DisplayName,
+            Email = user.Email,
+            BusinessName = profile.BusinessName,
+            TaxId = profile.TaxId,
+            StoreId = profile.OwnedStore?.Id,
+            StoreName = profile.OwnedStore?.Name
+        };
+    }
 }

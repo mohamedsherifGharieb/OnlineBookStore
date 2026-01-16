@@ -135,7 +135,7 @@ namespace BookStoreApi.Data
                       .HasForeignKey(e => e.StoreId)
                       .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasIndex(e => new { e.StoreId, e.ISBN });
+                entity.HasIndex(e => new { e.StoreId, e.ISBN }).IsUnique();
             });
 
             // ----------------------------

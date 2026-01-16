@@ -12,6 +12,6 @@ public class StoreDetailDto
         public string? Description { get; set; }
         public DateTime CreatedAt { get; set; }
         public int TotalBooks { get; set; }
-        public List<EBookDto> Books { get; set; } = new();
+        public List<EBookWithStoreDto> Books { get; set; } = new();
    
 }

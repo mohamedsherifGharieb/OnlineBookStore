@@ -3,13 +3,15 @@ using System.Text;
 using BookStoreApi.Data;
 using BookStoreApi.DTOS;
 using BookStoreApi.Entities;
+using BookStoreApi.Extensions;
 using BookStoreApi.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreApi.Controllers
 {
-    public class AccountController(AppDbContext _context, ITokenService _tokenService) : BaseApiController
+    public class AccountController(UserManager<AppUser> userManager, ITokenService _tokenService) : BaseApiController
     {
         // =====================================
         // REGISTER
@@ -54,18 +56,11 @@ namespace BookStoreApi.Controllers
             {
                 return BadRequest("Invalid user role");
             }
+            var result = await userManager.CreateAsync(user);
+            if (!result.Succeeded)
+                return BadRequest("Problem registering user");
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            return new UserDto
-            {
-                Id = user.Id,
-                Email = user.Email,
-                DisplayName = user.DisplayName,
-                Image = user.ImageUrl,
-                Token = _tokenService.CreateToken(user)
-            };
+            return  user.ToUserDto(_tokenService);
         }
 
         // =====================================
@@ -74,11 +69,7 @@ namespace BookStoreApi.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
-            var user = await _context.Users
-                .Include(u => u.BuyerProfile)
-                .Include(u => u.StoreOwnerProfile)
-                .SingleOrDefaultAsync(u =>
-                    u.Email == loginDto.Email.Trim().ToLower());
+           var user = await userManager.FindByEmailAsync(loginDto.Email.Trim().ToLower());
 
             if (user == null)
                 return Unauthorized("Invalid email");
@@ -92,15 +83,7 @@ namespace BookStoreApi.Controllers
                 if (computedHash[i] != user.PasswordHash[i])
                     return Unauthorized("Invalid password");
             }
-
-            return new UserDto
-            {
-                Id = user.Id,
-                Email = user.Email,
-                DisplayName = user.DisplayName,
-                Image = user.ImageUrl,
-                Token = _tokenService.CreateToken(user)
-            };
+            return  user.ToUserDto(_tokenService);
         }
 
         // =====================================
@@ -108,7 +91,7 @@ namespace BookStoreApi.Controllers
         // =====================================
         private async Task<bool> UserExists(string email)
         {
-            return await _context.Users
+            return await userManager.Users
                 .AnyAsync(u => u.Email == email.Trim().ToLower());
         }
     }

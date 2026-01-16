@@ -2,14 +2,16 @@ using System.Security.Claims;
 using BookStoreApi.Data;
 using BookStoreApi.DTOS;
 using BookStoreApi.Entities;
+using BookStoreApi.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreApi.Controllers
 {
     [Authorize]
-    public class StoreOwnerProfileController(AppDbContext _context) : BaseApiController
+    public class StoreOwnerProfileController(UserManager<AppUser> userManager, AppDbContext _context) : BaseApiController
     {
         // =====================================
         // GET: api/storeownerprofile
@@ -18,10 +20,15 @@ namespace BookStoreApi.Controllers
         [HttpGet]
         public async Task<ActionResult<StoreOwnerProfileDto>> GetMyProfile()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized("User ID not found in token");
+
+            var user = await userManager.FindByIdAsync(userId);
+
+            if (user == null)
+                return NotFound("User not found");
 
             var profile = await _context.StoreOwnerProfiles
                 .Include(s => s.OwnedStore)
@@ -30,21 +37,7 @@ namespace BookStoreApi.Controllers
             if (profile == null)
                 return NotFound("Store owner profile not found");
 
-            var user = await _context.Users.FindAsync(userId);
-
-            if (user == null)
-                return NotFound("User not found");
-
-            return Ok(new StoreOwnerProfileDto
-            {
-                Id = profile.Id,
-                DisplayName = user.DisplayName,
-                Email = user.Email,
-                BusinessName = profile.BusinessName,
-                TaxId = profile.TaxId,
-                StoreId = profile.OwnedStore?.Id,
-                StoreName = profile.OwnedStore?.Name
-            });
+            return Ok(user.ToStoreOwnerProfileDto(profile));
         }
 
         // =====================================
@@ -54,7 +47,10 @@ namespace BookStoreApi.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateMyProfile(UpdateStoreOwnerProfileDto dto)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if( dto == null || (string.IsNullOrWhiteSpace(dto.BusinessName) && string.IsNullOrWhiteSpace(dto.TaxId)))
+                return BadRequest("Invalid profile data");
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized("User ID not found in token");
@@ -84,7 +80,7 @@ namespace BookStoreApi.Controllers
         [HttpPost("store")]
         public async Task<ActionResult<StoreDto>> CreateStore(CreateStoreDto dto)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized("User ID not found in token");
@@ -99,10 +95,17 @@ namespace BookStoreApi.Controllers
             if (profile.OwnedStore != null)
                 return BadRequest("You already have a store. Only one store per owner is allowed.");
 
+            // Check if store name already exists
+            var storeNameExists = await _context.Stores
+                .AnyAsync(s => s.Name.ToLower() == dto.Name.Trim().ToLower());
+            
+            if (storeNameExists)
+                return BadRequest($"A store with the name '{dto.Name}' already exists. Please choose a different name.");
+
             var store = new Store
             {
                 Id = Guid.NewGuid().ToString(),
-                Name = dto.Name,
+                Name = dto.Name.Trim(),
                 Description = dto.Description,
                 StoreOwnerProfileId = userId,
                 CreatedAt = DateTime.UtcNow
@@ -111,7 +114,7 @@ namespace BookStoreApi.Controllers
             _context.Stores.Add(store);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetMyStore), null, new StoreDto
+            return CreatedAtAction(nameof(GetMyStore), new {id = store.Id }, new StoreDto
             {
                 Id = store.Id,
                 Name = store.Name,
@@ -127,7 +130,7 @@ namespace BookStoreApi.Controllers
         [HttpGet("store")]
         public async Task<ActionResult<StoreDto>> GetMyStore()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized("User ID not found in token");
@@ -154,10 +157,13 @@ namespace BookStoreApi.Controllers
         [HttpPut("store")]
         public async Task<ActionResult> UpdateMyStore(UpdateStoreDto dto)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized("User ID not found in token");
+
+            if( dto == null || (string.IsNullOrWhiteSpace(dto.Name) && string.IsNullOrWhiteSpace(dto.Description)))
+                return BadRequest("Invalid store data");
 
             var store = await _context.Stores
                 .FirstOrDefaultAsync(s => s.StoreOwnerProfileId == userId);
@@ -165,8 +171,17 @@ namespace BookStoreApi.Controllers
             if (store == null)
                 return NotFound("No store found");
 
+            // If updating name, check if new name already exists
             if (!string.IsNullOrWhiteSpace(dto.Name))
+            {
+                var nameExists = await _context.Stores
+                    .AnyAsync(s => s.Name.ToLower() == dto.Name.Trim().ToLower() && s.Id != store.Id);
+
+                if (nameExists)
+                    return BadRequest($"A store with the name '{dto.Name}' already exists. Please choose a different name.");
+
                 store.Name = dto.Name;
+            }
 
             if (!string.IsNullOrWhiteSpace(dto.Description))
                 store.Description = dto.Description;
@@ -183,7 +198,7 @@ namespace BookStoreApi.Controllers
         [HttpDelete("store")]
         public async Task<ActionResult> DeleteMyStore()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized("User ID not found in token");

@@ -19,7 +19,7 @@ namespace BookStoreApi.Controllers
         [HttpPost]
         public async Task<ActionResult<OrderDto>> CreateOrder(CreateOrderDto dto)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized("User ID not found in token");
@@ -86,23 +86,7 @@ namespace BookStoreApi.Controllers
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetOrderById), new { id = order.Id }, new OrderDto
-            {
-                Id = order.Id,
-                StoreName = store.Name,
-                TotalAmount = order.TotalAmount,
-                Status = order.Status.ToString(),
-                OrderDate = order.OrderDate,
-                ShippingAddress = order.ShippingAddress,
-                Items = order.OrderItems.Select(oi => new OrderItemDto
-                {
-                    EBookId = oi.EBookId,
-                    EBookTitle = _context.Books.Find(oi.EBookId)?.Title ?? "",
-                    Quantity = oi.Quantity,
-                    UnitPrice = oi.UnitPrice,
-                    Subtotal = oi.Subtotal
-                }).ToList()
-            });
+            return CreatedAtAction(nameof(GetOrderById), new { id = order.Id }, order.ToOrderDto());
         }
 
         // =====================================
@@ -131,25 +115,7 @@ namespace BookStoreApi.Controllers
             if (!isBuyer && !isStoreOwner)
                 return Forbid();
 
-            return Ok(new OrderDto
-            {
-                Id = order.Id,
-                StoreName = order.Store.Name,
-                TotalAmount = order.TotalAmount,
-                Status = order.Status.ToString(),
-                OrderDate = order.OrderDate,
-                CompletedDate = order.CompletedDate,
-                CancelledDate = order.CancelledDate,
-                ShippingAddress = order.ShippingAddress,
-                Items = order.OrderItems.Select(oi => new OrderItemDto
-                {
-                    EBookId = oi.EBookId,
-                    EBookTitle = oi.EBook.Title,
-                    Quantity = oi.Quantity,
-                    UnitPrice = oi.UnitPrice,
-                    Subtotal = oi.Subtotal
-                }).ToList()
-            });
+            return Ok(order.ToOrderDto());
         }
 
         // =====================================
@@ -159,7 +125,7 @@ namespace BookStoreApi.Controllers
         [HttpGet("buyer")]
         public async Task<ActionResult<IReadOnlyList<OrderDto>>> GetBuyerOrders()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var orders = await _context.Orders
                 .Include(o => o.Store)
@@ -169,25 +135,7 @@ namespace BookStoreApi.Controllers
                 .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
 
-            return Ok(orders.Select(o => new OrderDto
-            {
-                Id = o.Id,
-                StoreName = o.Store.Name,
-                TotalAmount = o.TotalAmount,
-                Status = o.Status.ToString(),
-                OrderDate = o.OrderDate,
-                CompletedDate = o.CompletedDate,
-                CancelledDate = o.CancelledDate,
-                ShippingAddress = o.ShippingAddress,
-                Items = o.OrderItems.Select(oi => new OrderItemDto
-                {
-                    EBookId = oi.EBookId,
-                    EBookTitle = oi.EBook.Title,
-                    Quantity = oi.Quantity,
-                    UnitPrice = oi.UnitPrice,
-                    Subtotal = oi.Subtotal
-                }).ToList()
-            }).ToList());
+           return Ok(orders.Select(o => o.ToOrderDto()).ToList());
         }
 
         // =====================================
@@ -197,7 +145,7 @@ namespace BookStoreApi.Controllers
         [HttpGet("store")]
         public async Task<ActionResult<IReadOnlyList<OrderDto>>> GetStoreOrders()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             // Get store owned by this user
             var store = await _context.Stores
@@ -213,26 +161,7 @@ namespace BookStoreApi.Controllers
                 .Where(o => o.StoreId == store.Id)
                 .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
-
-            return Ok(orders.Select(o => new OrderDto
-            {
-                Id = o.Id,
-                StoreName = o.Store.Name,
-                TotalAmount = o.TotalAmount,
-                Status = o.Status.ToString(),
-                OrderDate = o.OrderDate,
-                CompletedDate = o.CompletedDate,
-                CancelledDate = o.CancelledDate,
-                ShippingAddress = o.ShippingAddress,
-                Items = o.OrderItems.Select(oi => new OrderItemDto
-                {
-                    EBookId = oi.EBookId,
-                    EBookTitle = oi.EBook.Title,
-                    Quantity = oi.Quantity,
-                    UnitPrice = oi.UnitPrice,
-                    Subtotal = oi.Subtotal
-                }).ToList()
-            }).ToList());
+            return Ok(orders.Select(o => o.ToOrderDto()).ToList());
         }
 
         // =====================================
@@ -242,7 +171,7 @@ namespace BookStoreApi.Controllers
         [HttpPut("{id}/status")]
         public async Task<ActionResult> UpdateOrderStatus(string id, UpdateOrderStatusDto dto)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var order = await _context.Orders
                 .Include(o => o.OrderItems)
@@ -287,7 +216,7 @@ namespace BookStoreApi.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> CancelOrder(string id)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var order = await _context.Orders
                 .Include(o => o.OrderItems)
