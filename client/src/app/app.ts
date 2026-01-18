@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { AccountService } from '../Core/services/account-service';
 
 @Component({
   selector: 'app-root',
@@ -9,25 +10,21 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.css'
 })
 export class App implements OnInit {
-  
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
+
+  private accountService = inject(AccountService);
   private http = inject(HttpClient);
+  protected readonly title = 'Dating App';
+  protected members= signal<any>([]); 
 
-
-  protected readonly title = signal('client');
-   async ngOnInit(): Promise<void> {
-    this.members.set(await this.getMembers());
+  async ngOnInit(): Promise<void> {
+    this.setCurrentUser();
+  }
+  setCurrentUser(){
+    const userString = localStorage.getItem('user');
+    if(!userString) return;
+    const user = JSON.parse(userString);
+    this.accountService.currentUser.set(user);
   }
 
-  async getMembers(){
-    try {
-      return lastValueFrom(this.http.get('https://localhost:5002/api/members'));
-      }
-    catch(error){
-      console.log(error);
-      throw error;
-    }
 
 }
