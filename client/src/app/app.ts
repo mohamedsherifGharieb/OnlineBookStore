@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { AccountService } from '../Core/services/account-service';
+import { Home } from '../Features/home/home';
+import { Nav } from '../Layout/nav/nav';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [Home,Nav],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -13,7 +14,7 @@ export class App implements OnInit {
 
   private accountService = inject(AccountService);
   private http = inject(HttpClient);
-  protected readonly title = 'Dating App';
+  protected readonly title = 'BookStore';
   protected members= signal<any>([]); 
 
   async ngOnInit(): Promise<void> {
@@ -28,3 +29,4 @@ export class App implements OnInit {
 
 
 }
+
