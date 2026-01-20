@@ -1,0 +1,133 @@
+<header class="sticky top-0 z-50 w-full border-b bg-[color:var(--color-library-cream)]/95 backdrop-blur">
+  <div class="container mx-auto px-4">
+    <div class="flex h-16 items-center justify-between gap-4">
+      
+      <!-- Logo -->
+      <a routerLink="/" class="flex items-center gap-2 text-[color:var(--color-library-orange)]">
+        <lucide-icon [img]="BookOpen" class="h-8 w-8"></lucide-icon>
+        <span class="font-serif text-xl font-bold hidden sm:inline text-[color:var(--color-library-brown)]">BookStore</span>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden lg:flex items-center gap-6">
+        <a 
+          *ngFor="let link of navLinks"
+          [routerLink]="link.href"
+          class="text-sm font-medium text-[color:var(--color-library-brown)]/70 hover:text-[color:var(--color-library-orange)] transition-colors"
+        >
+          {{ link.label }}
+        </a>
+      </nav>
+
+      <!-- Search Bar (Desktop) -->
+      <div class="hidden md:flex flex-1 max-w-md mx-4">
+        <div class="relative w-full">
+          <lucide-icon 
+            [img]="Search" 
+            class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--color-library-brown)]/50"
+          ></lucide-icon>
+          <input
+            type="search"
+            placeholder="Search for books, authors, stores..."
+            class="w-full pl-10 pr-4 py-2 rounded-md border border-[color:var(--color-library-brown)]/30 bg-white focus:outline-none focus:border-[color:var(--color-library-orange)] focus:ring-1 focus:ring-[color:var(--color-library-orange)]"
+          />
+        </div>
+      </div>
+
+      <!-- Right Side Actions -->
+      <div class="flex items-center gap-2">
+        
+        <!-- Cart Button -->
+        <button 
+          routerLink="/cart"
+          class="relative p-2 hover:bg-[color:var(--color-library-brown)]/10 rounded-md transition-colors"
+        >
+          <lucide-icon [img]="ShoppingCart" class="h-5 w-5 text-[color:var(--color-library-brown)]"></lucide-icon>
+          <span 
+            *ngIf="cartItemCount > 0"
+            class="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-[color:var(--color-library-orange)] text-white text-xs font-bold flex items-center justify-center"
+          >
+            {{ cartItemCount }}
+          </span>
+        </button>
+
+        <!-- Auth Buttons (Desktop) -->
+        <div class="hidden sm:flex items-center gap-2">
+          <button 
+            (click)="onSignIn()"
+            class="px-4 py-2 border border-[color:var(--color-library-brown)] text-[color:var(--color-library-brown)] bg-[color:var(--color-library-cream)] rounded-md hover:bg-[color:var(--color-library-brown)] hover:text-white transition-colors"
+          >
+            Sign In
+          </button>
+          <button 
+            (click)="onSignUp()"
+            class="px-4 py-2 bg-[color:var(--color-library-orange)] text-white rounded-md hover:bg-[color:var(--color-library-orange-light)] transition-colors"
+          >
+            Sign Up
+          </button>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button 
+          (click)="toggleMenu()"
+          class="lg:hidden p-2 hover:bg-[color:var(--color-library-brown)]/10 rounded-md transition-colors"
+        >
+          <lucide-icon 
+            [img]="isMenuOpen ? X : Menu" 
+            class="h-5 w-5 text-[color:var(--color-library-brown)]"
+          ></lucide-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div 
+      *ngIf="isMenuOpen"
+      class="lg:hidden border-t border-[color:var(--color-library-brown)]/20 bg-[color:var(--color-library-cream)] animate-fade-in"
+    >
+      <div class="py-4 space-y-4">
+        
+        <!-- Mobile Search -->
+        <div class="relative md:hidden">
+          <lucide-icon 
+            [img]="Search" 
+            class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--color-library-brown)]/50"
+          ></lucide-icon>
+          <input
+            type="search"
+            placeholder="Search for books..."
+            class="w-full pl-10 pr-4 py-2 rounded-md border border-[color:var(--color-library-brown)]/30 bg-white focus:outline-none focus:border-[color:var(--color-library-orange)]"
+          />
+        </div>
+
+        <!-- Mobile Nav Links -->
+        <nav class="flex flex-col gap-2">
+          <a 
+            *ngFor="let link of navLinks"
+            [routerLink]="link.href"
+            (click)="closeMenu()"
+            class="px-4 py-2 text-sm font-medium text-[color:var(--color-library-brown)]/70 hover:text-[color:var(--color-library-orange)] hover:bg-[color:var(--color-library-brown)]/5 rounded-md transition-colors"
+          >
+            {{ link.label }}
+          </a>
+        </nav>
+
+        <!-- Mobile Auth Buttons -->
+        <div class="flex gap-2 pt-2 sm:hidden">
+          <button 
+            (click)="onSignIn(); closeMenu()"
+            class="flex-1 px-4 py-2 border border-[color:var(--color-library-brown)] text-[color:var(--color-library-brown)] bg-white rounded-md hover:bg-[color:var(--color-library-brown)] hover:text-white transition-colors"
+          >
+            Sign In
+          </button>
+          <button 
+            (click)="onSignUp(); closeMenu()"
+            class="flex-1 px-4 py-2 bg-[color:var(--color-library-orange)] text-white rounded-md hover:bg-[color:var(--color-library-orange-light)] transition-colors"
+          >
+            Sign Up
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
