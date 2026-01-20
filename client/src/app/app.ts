@@ -6,7 +6,7 @@ import { Nav } from '../Layout/nav/nav';
 
 @Component({
   selector: 'app-root',
-  imports: [Home,Nav],
+  imports: [Nav],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
