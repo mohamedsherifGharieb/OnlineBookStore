@@ -1,0 +1,14 @@
+/* Register page styles */
+input[type="checkbox"] {
+  accent-color: #ff8c00;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #ff8c00;
+  border-color: #ff8c00;
+}
+
+input[type="checkbox"]:focus {
+  outline-color: #ff8c00;
+  box-shadow: 0 0 0 2px rgba(255, 140, 0, 0.2);
+}

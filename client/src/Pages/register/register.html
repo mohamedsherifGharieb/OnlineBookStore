@@ -1,0 +1,249 @@
+<div class="min-h-screen bg-[#fffbeb] flex flex-col items-center justify-center p-4 py-8 relative">
+  <!-- Back Arrow -->
+  <a 
+    routerLink="/" 
+    class="absolute top-6 left-6 flex items-center gap-2 text-[#8b7355] hover:text-[#5c3d2e] transition-colors"
+  >
+    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+    </svg>
+    <span class="text-sm font-medium">Back</span>
+  </a>
+
+  <!-- Logo -->
+  <a routerLink="/" class="flex items-center gap-2 mb-8">
+    <svg class="h-8 w-8 text-[#5c3d2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+    </svg>
+    <span class="font-serif text-2xl font-bold text-[#5c3d2e]">BookStore</span>
+  </a>
+
+  <!-- Card -->
+  <div class="w-full max-w-md bg-white rounded-xl shadow-lg border border-[#5c3d2e]/20 overflow-hidden">
+    <!-- Header -->
+    <div class="p-6 text-center border-b border-[#5c3d2e]/10">
+      <h1 class="text-2xl font-serif font-bold text-[#5c3d2e]">Join BookStore</h1>
+      <p class="mt-2 text-[#8b7355]">Create an account to start your reading journey</p>
+    </div>
+
+    <!-- Form -->
+    <div class="p-6">
+      <form (ngSubmit)="onSubmit()" class="space-y-4">
+        <!-- Name Field -->
+        <div class="space-y-2">
+          <label for="name" class="block text-sm font-medium text-[#5c3d2e]">Display Name</label>
+          <input
+            id="name"
+            type="text"
+            placeholder="Your name"
+            [(ngModel)]="formData.name"
+            name="name"
+            required
+            class="w-full px-4 py-3 rounded-lg border border-[#5c3d2e]/30 bg-white focus:outline-none focus:border-[#5c3d2e] focus:ring-2 focus:ring-[#5c3d2e]/20 transition-colors"
+          />
+        </div>
+
+        <!-- Email Field -->
+        <div class="space-y-2">
+          <label for="email" class="block text-sm font-medium text-[#5c3d2e]">Email</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="your@email.com"
+            [(ngModel)]="formData.email"
+            name="email"
+            required
+            class="w-full px-4 py-3 rounded-lg border border-[#5c3d2e]/30 bg-white focus:outline-none focus:border-[#5c3d2e] focus:ring-2 focus:ring-[#5c3d2e]/20 transition-colors"
+          />
+        </div>
+
+        <!-- Password Field -->
+        <div class="space-y-2">
+          <label for="password" class="block text-sm font-medium text-[#5c3d2e]">Password</label>
+          <div class="relative">
+            <input
+              id="password"
+              [type]="showPassword() ? 'text' : 'password'"
+              placeholder="••••••••"
+              [(ngModel)]="formData.password"
+              name="password"
+              required
+              class="w-full px-4 py-3 pr-12 rounded-lg border border-[#5c3d2e]/30 bg-white focus:outline-none focus:border-[#5c3d2e] focus:ring-2 focus:ring-[#5c3d2e]/20 transition-colors"
+            />
+            <button
+              type="button"
+              (click)="togglePassword()"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-[#8b7355] hover:text-[#5c3d2e] transition-colors"
+            >
+              @if (showPassword()) {
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                </svg>
+              } @else {
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+              }
+            </button>
+          </div>
+
+          <!-- Password Strength -->
+          @if (formData.password) {
+            <div class="space-y-1">
+              <div class="flex gap-1">
+                @for (level of [1, 2, 3, 4]; track level) {
+                  <div
+                    class="h-1 flex-1 rounded-full transition-colors"
+                    [class]="isStrengthLevel(level) ? passwordStrength().color : 'bg-gray-200'"
+                  ></div>
+                }
+              </div>
+              <p class="text-xs text-[#8b7355]">{{ passwordStrength().label }}</p>
+            </div>
+          }
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="space-y-2">
+          <label for="confirmPassword" class="block text-sm font-medium text-[#5c3d2e]">Confirm Password</label>
+          <div class="relative">
+            <input
+              id="confirmPassword"
+              [type]="showConfirmPassword() ? 'text' : 'password'"
+              placeholder="••••••••"
+              [(ngModel)]="formData.confirmPassword"
+              name="confirmPassword"
+              required
+              class="w-full px-4 py-3 pr-12 rounded-lg border border-[#5c3d2e]/30 bg-white focus:outline-none focus:border-[#5c3d2e] focus:ring-2 focus:ring-[#5c3d2e]/20 transition-colors"
+            />
+            <button
+              type="button"
+              (click)="toggleConfirmPassword()"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-[#8b7355] hover:text-[#5c3d2e] transition-colors"
+            >
+              @if (showConfirmPassword()) {
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                </svg>
+              } @else {
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+              }
+            </button>
+          </div>
+        </div>
+
+        <!-- Role Selection -->
+        <div class="space-y-3">
+          <label class="block text-sm font-medium text-[#5c3d2e]">I am a...</label>
+          <div class="grid grid-cols-2 gap-3">
+            <!-- Buyer Option -->
+            <button
+              type="button"
+              (click)="setRole('buyer')"
+              class="relative flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all cursor-pointer"
+              [class]="role() === 'buyer' ? 'border-[#ff8c00] bg-[#ff8c00]/10' : 'border-[#5c3d2e]/30 bg-white hover:border-[#5c3d2e]/50'"
+            >
+              @if (role() === 'buyer') {
+                <svg class="absolute top-2 right-2 h-4 w-4 text-[#ff8c00]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+              }
+              <svg 
+                class="h-6 w-6" 
+                [class]="role() === 'buyer' ? 'text-[#ff8c00]' : 'text-[#5c3d2e]'"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+              </svg>
+              <span 
+                class="text-sm font-medium"
+                [class]="role() === 'buyer' ? 'text-[#ff8c00]' : 'text-[#5c3d2e]'"
+              >
+                Buyer
+              </span>
+            </button>
+
+            <!-- Store Owner Option -->
+            <button
+              type="button"
+              (click)="setRole('store')"
+              class="relative flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all cursor-pointer"
+              [class]="role() === 'store' ? 'border-[#ff8c00] bg-[#ff8c00]/10' : 'border-[#5c3d2e]/30 bg-white hover:border-[#5c3d2e]/50'"
+            >
+              @if (role() === 'store') {
+                <svg class="absolute top-2 right-2 h-4 w-4 text-[#ff8c00]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+              }
+              <svg 
+                class="h-6 w-6"
+                [class]="role() === 'store' ? 'text-[#ff8c00]' : 'text-[#5c3d2e]'"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+              </svg>
+              <span 
+                class="text-sm font-medium"
+                [class]="role() === 'store' ? 'text-[#ff8c00]' : 'text-[#5c3d2e]'"
+              >
+                Store Owner
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Terms -->
+        <div class="flex items-start gap-2">
+          <input
+            type="checkbox"
+            id="terms"
+            [(ngModel)]="formData.agreeTerms"
+            name="agreeTerms"
+            required
+            class="h-4 w-4 mt-0.5 rounded border-[#5c3d2e]/30 text-[#ff8c00] focus:ring-[#ff8c00] cursor-pointer"
+          />
+          <label for="terms" class="text-sm text-[#8b7355] cursor-pointer">
+            I agree to the
+            <a href="#" class="text-[#ff8c00] hover:underline">Terms & Conditions</a>
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="w-full py-3 cursor-pointer px-4 rounded-lg bg-[#ff8c00] text-white font-semibold hover:bg-[#e67e00] transition-colors focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/50"
+        >
+          Create Account
+        </button>
+
+        <!-- Divider -->
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-[#5c3d2e]/20"></div>
+          </div>
+          <div class="relative flex justify-center text-xs uppercase">
+            <span class="bg-white px-2 text-[#8b7355]">OR</span>
+          </div>
+        </div>
+
+        <!-- Switch to Login -->
+        <p class="text-center text-sm text-[#8b7355]">
+          Already have an account?
+          <a routerLink="/login" class="text-[#ff8c00] hover:underline font-medium">Sign In</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Back to Home -->
+  <a routerLink="/" class="mt-6 text-sm text-[#8b7355] hover:text-[#5c3d2e] transition-colors flex items-center gap-1">
+    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+    </svg>
+    Back to Home
+  </a>
+</div>

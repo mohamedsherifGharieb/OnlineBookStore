@@ -1,0 +1,14 @@
+/* Input focus styles */
+input:focus {
+  outline: none;
+}
+
+/* Checkbox accent color */
+input[type="checkbox"] {
+  accent-color: #ff8c00;
+}
+
+/* Card shadow */
+.shadow-lg {
+  box-shadow: 0 10px 25px -5px rgba(92, 61, 46, 0.1), 0 8px 10px -6px rgba(92, 61, 46, 0.1);
+}

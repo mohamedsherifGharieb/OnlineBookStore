@@ -1,0 +1,323 @@
+<div class="min-h-screen bg-[#fffbeb]">
+  <app-nav></app-nav>
+
+  <main class="container mx-auto px-4 py-8">
+    <!-- Page Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl md:text-4xl font-serif font-bold text-[#5c3d2e] mb-2">
+        Browse Books
+      </h1>
+      <p class="text-[#8b7355]">
+        Discover your next favorite read from our collection
+      </p>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- Desktop Sidebar -->
+      <aside class="hidden lg:block w-64 shrink-0">
+        <div class="sticky top-24 bg-white rounded-xl border border-[#5c3d2e]/20 p-6 shadow-sm">
+          <h2 class="font-serif font-bold text-lg text-[#5c3d2e] mb-6">Filters</h2>
+          
+          <!-- Categories -->
+          <div class="mb-6">
+            <h3 class="font-serif font-semibold text-[#5c3d2e] mb-3">Categories</h3>
+            <div class="space-y-2">
+              @for (category of categories; track category) {
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    [checked]="isCategorySelected(category)"
+                    (change)="toggleCategory(category)"
+                    class="h-4 w-4 rounded border-[#5c3d2e]/30 text-[#ff8c00] focus:ring-[#ff8c00]"
+                  />
+                  <span class="text-sm text-[#5c3d2e]">{{ category }}</span>
+                </label>
+              }
+            </div>
+          </div>
+
+          <!-- Price Range -->
+          <div class="mb-6">
+            <h3 class="font-serif font-semibold text-[#5c3d2e] mb-3">Price Range</h3>
+            <div class="space-y-3">
+              <input
+                type="range"
+                [min]="0"
+                [max]="50"
+                [value]="priceRange()[0]"
+                (input)="onPriceMinChange($event)"
+                class="w-full accent-[#ff8c00]"
+              />
+              <input
+                type="range"
+                [min]="0"
+                [max]="50"
+                [value]="priceRange()[1]"
+                (input)="onPriceMaxChange($event)"
+                class="w-full accent-[#ff8c00]"
+              />
+              <div class="flex justify-between text-sm text-[#8b7355]">
+                <span>${{ priceRange()[0] }}</span>
+                <span>${{ priceRange()[1] }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rating -->
+          <div class="mb-6">
+            <h3 class="font-serif font-semibold text-[#5c3d2e] mb-3">Rating</h3>
+            <div class="space-y-2">
+              @for (rating of ratings; track rating) {
+                <button
+                  (click)="setRating(rating)"
+                  class="flex items-center gap-2 w-full p-2 rounded-lg transition-colors cursor-pointer"
+                  [class]="selectedRating() === rating ? 'bg-[#ff8c00]/10 text-[#ff8c00]' : 'hover:bg-[#5c3d2e]/5'"
+                >
+                  <div class="flex">
+                    @for (star of getStarArray(); track star) {
+                      <span [class]="star <= rating ? 'text-[#ff8c00]' : 'text-[#ffc680]'">★</span>
+                    }
+                  </div>
+                  <span class="text-sm">& up</span>
+                </button>
+              }
+            </div>
+          </div>
+
+          <!-- Clear Filters -->
+          @if (hasActiveFilters()) {
+            <button
+              (click)="clearFilters()"
+              class="w-full py-2 px-4 border border-[#5c3d2e]/30 text-[#5c3d2e] rounded-lg hover:bg-[#5c3d2e]/5 transition-colors cursor-pointer"
+            >
+              Clear All Filters
+            </button>
+          }
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="flex-1">
+        <!-- Top Bar -->
+        <div class="flex flex-col sm:flex-row gap-4 mb-6">
+          <!-- Mobile Filter Button -->
+          <button
+            (click)="toggleMobileFilters()"
+            class="lg:hidden flex items-center justify-center gap-2 px-4 py-3 border border-[#5c3d2e]/30 rounded-lg hover:bg-[#5c3d2e]/5 transition-colors cursor-pointer"
+          >
+            <svg class="h-4 w-4 text-[#5c3d2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+            </svg>
+            <span class="text-[#5c3d2e]">Filters</span>
+            @if (hasActiveFilters()) {
+              <span class="w-2 h-2 rounded-full bg-[#ff8c00]"></span>
+            }
+          </button>
+
+          <!-- Sort & View -->
+          <div class="flex gap-2">
+            <select
+              [ngModel]="sortBy()"
+              (ngModelChange)="sortBy.set($event)"
+              class="px-4 py-3 rounded-lg border border-[#5c3d2e]/30 bg-white text-[#5c3d2e] focus:outline-none focus:border-[#5c3d2e] cursor-pointer"
+            >
+              <option value="featured">Featured</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="rating">Top Rated</option>
+              <option value="newest">Newest</option>
+            </select>
+
+            <div class="hidden sm:flex border border-[#5c3d2e]/30 rounded-lg overflow-hidden">
+              <button
+                (click)="setViewMode('grid')"
+                class="p-3 transition-colors cursor-pointer"
+                [class]="viewMode() === 'grid' ? 'bg-[#5c3d2e] text-white' : 'bg-white text-[#5c3d2e] hover:bg-[#5c3d2e]/5'"
+              >
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                </svg>
+              </button>
+              <button
+                (click)="setViewMode('list')"
+                class="p-3 transition-colors cursor-pointer"
+                [class]="viewMode() === 'list' ? 'bg-[#5c3d2e] text-white' : 'bg-white text-[#5c3d2e] hover:bg-[#5c3d2e]/5'"
+              >
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Filters -->
+        @if (hasActiveFilters()) {
+          <div class="flex flex-wrap gap-2 mb-6">
+            @for (cat of selectedCategories(); track cat) {
+              <span class="inline-flex items-center gap-1 px-3 py-1 bg-[#ff8c00]/10 text-[#ff8c00] rounded-full text-sm">
+                {{ cat }}
+                <button (click)="toggleCategory(cat)" class="cursor-pointer">
+                  <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                </button>
+              </span>
+            }
+            @if (selectedRating()) {
+              <span class="inline-flex items-center gap-1 px-3 py-1 bg-[#ff8c00]/10 text-[#ff8c00] rounded-full text-sm">
+                {{ selectedRating() }}+ stars
+                <button (click)="selectedRating.set(null)" class="cursor-pointer">
+                  <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                </button>
+              </span>
+            }
+          </div>
+        }
+
+        <!-- Results Count -->
+        <p class="text-[#8b7355] mb-6">
+          Showing {{ filteredBooks().length }} of {{ books.length }} books
+        </p>
+
+        <!-- Books Grid/List -->
+        @if (filteredBooks().length > 0) {
+          <div
+            [class]="viewMode() === 'grid' 
+              ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-6' 
+              : 'space-y-4'"
+          >
+            @for (book of filteredBooks(); track book.id) {
+              <div
+                (click)="navigateToBook(book.id)"
+                class="cursor-pointer"
+              >
+                <app-book-card [book]="book"></app-book-card>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="text-center py-12">
+            <p class="text-lg text-[#8b7355] mb-4">
+              No books found matching your criteria
+            </p>
+            <button
+              (click)="clearFilters()"
+              class="px-6 py-3 border-2 border-[#ff8c00] text-[#ff8c00] font-semibold rounded-lg hover:bg-[#ff8c00]/10 transition-colors cursor-pointer"
+            >
+              Clear Filters
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Mobile Filters Overlay -->
+    @if (showMobileFilters()) {
+      <div class="fixed inset-0 z-50 lg:hidden">
+        <!-- Backdrop -->
+        <div 
+          class="absolute inset-0 bg-black/50" 
+          (click)="toggleMobileFilters()"
+        ></div>
+        
+        <!-- Drawer -->
+        <div class="absolute left-0 top-0 h-full w-80 bg-white shadow-xl overflow-y-auto">
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="font-serif font-bold text-lg text-[#5c3d2e]">Filters</h2>
+              <button 
+                (click)="toggleMobileFilters()"
+                class="p-2 hover:bg-[#5c3d2e]/5 rounded-lg transition-colors cursor-pointer"
+              >
+                <svg class="h-5 w-5 text-[#5c3d2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Categories -->
+            <div class="mb-6">
+              <h3 class="font-serif font-semibold text-[#5c3d2e] mb-3">Categories</h3>
+              <div class="space-y-2">
+                @for (category of categories; track category) {
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      [checked]="isCategorySelected(category)"
+                      (change)="toggleCategory(category)"
+                      class="h-4 w-4 rounded border-[#5c3d2e]/30 text-[#ff8c00] focus:ring-[#ff8c00]"
+                    />
+                    <span class="text-sm text-[#5c3d2e]">{{ category }}</span>
+                  </label>
+                }
+              </div>
+            </div>
+
+            <!-- Price Range -->
+            <div class="mb-6">
+              <h3 class="font-serif font-semibold text-[#5c3d2e] mb-3">Price Range</h3>
+              <div class="space-y-3">
+                <input
+                  type="range"
+                  [min]="0"
+                  [max]="50"
+                  [value]="priceRange()[0]"
+                  (input)="onPriceMinChange($event)"
+                  class="w-full accent-[#ff8c00]"
+                />
+                <input
+                  type="range"
+                  [min]="0"
+                  [max]="50"
+                  [value]="priceRange()[1]"
+                  (input)="onPriceMaxChange($event)"
+                  class="w-full accent-[#ff8c00]"
+                />
+                <div class="flex justify-between text-sm text-[#8b7355]">
+                  <span>${{ priceRange()[0] }}</span>
+                  <span>${{ priceRange()[1] }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Rating -->
+            <div class="mb-6">
+              <h3 class="font-serif font-semibold text-[#5c3d2e] mb-3">Rating</h3>
+              <div class="space-y-2">
+                @for (rating of ratings; track rating) {
+                  <button
+                    (click)="setRating(rating)"
+                    class="flex items-center gap-2 w-full p-2 rounded-lg transition-colors cursor-pointer"
+                    [class]="selectedRating() === rating ? 'bg-[#ff8c00]/10 text-[#ff8c00]' : 'hover:bg-[#5c3d2e]/5'"
+                  >
+                    <div class="flex">
+                      @for (star of getStarArray(); track star) {
+                        <span [class]="star <= rating ? 'text-[#ff8c00]' : 'text-[#ffc680]'">★</span>
+                      }
+                    </div>
+                    <span class="text-sm">& up</span>
+                  </button>
+                }
+              </div>
+            </div>
+
+            <!-- Clear Filters -->
+            @if (hasActiveFilters()) {
+              <button
+                (click)="clearFilters()"
+                class="w-full py-2 px-4 border border-[#5c3d2e]/30 text-[#5c3d2e] rounded-lg hover:bg-[#5c3d2e]/5 transition-colors cursor-pointer"
+              >
+                Clear All Filters
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  </main>
+
+  <app-footer></app-footer>
+</div>

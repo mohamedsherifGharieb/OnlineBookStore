@@ -1,16 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { AccountService } from '../Core/services/account-service';
-import { Nav } from '../Layout/nav/nav';
-import { HeroSection } from '../Sections/hero/hero-section';
-import { AboutSection } from '../Sections/about/about-section';
-import { BookList } from '../Features/Books/book-list/book-list';
-import { HowItWorks } from '../Sections/how-it-works/how-it-works';
-import { Footer } from '../Sections/footer/footer';
 
 @Component({
   selector: 'app-root',
-  imports: [Nav,HeroSection,AboutSection,BookList,HowItWorks,Footer],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

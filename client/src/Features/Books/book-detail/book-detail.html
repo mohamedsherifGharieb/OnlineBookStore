@@ -1,0 +1,302 @@
+<div class="min-h-screen bg-[#fffbeb]">
+  <app-nav></app-nav>
+  
+  <main class="container mx-auto px-4 py-8">
+    @if (book()) {
+      <!-- Back Button -->
+      <button
+        (click)="goBack()"
+        class="flex items-center gap-2 text-[#8b7355] hover:text-[#5c3d2e] mb-6 transition-colors cursor-pointer"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Back to browsing
+      </button>
+
+      <!-- Main Content - 2 Columns -->
+      <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 mb-16">
+        <!-- Left Column - Book Cover -->
+        <div class="space-y-4 flex justify-center">
+          <div class="relative aspect-[3/4] max-w-lg w-full mx-auto bg-gray-100 rounded-xl overflow-hidden shadow-lg">
+            @if (book()!.isSale) {
+              <span class="absolute top-4 left-4 px-3 py-1 bg-red-500 text-white text-sm font-bold rounded-full z-10">
+                SALE
+              </span>
+            }
+            @if (book()!.isNew) {
+              <span class="absolute top-4 left-4 px-3 py-1 bg-green-500 text-white text-sm font-bold rounded-full z-10">
+                NEW
+              </span>
+            }
+            <img
+              [src]="book()!.coverUrl"
+              [alt]="'Cover of ' + book()!.title"
+              class="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+
+        <!-- Right Column - Book Details -->
+        <div class="space-y-6">
+          <!-- Title & Author -->
+          <div>
+            <h1 class="text-3xl md:text-4xl font-serif font-bold text-[#5c3d2e] mb-2">
+              {{ book()!.title }}
+            </h1>
+            <a href="#" class="text-lg text-[#ff8c00] hover:underline">
+              by {{ book()!.author }}
+            </a>
+          </div>
+
+          <!-- Store -->
+          <a
+            href="#"
+            class="inline-flex items-center gap-2 text-[#904d1d] hover:text-[#ff8c00] transition-colors"
+          >
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+            </svg>
+            <span class="font-medium">{{ book()!.store }}</span>
+          </a>
+
+          <!-- Rating -->
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-0.5">
+              @for (star of [1, 2, 3, 4, 5]; track star) {
+                <svg 
+                  class="h-5 w-5"
+                  [class]="isStarFilled(star) ? 'text-[#ff8c00] fill-[#ff8c00]' : isStarHalf(star) ? 'text-[#ff8c00] fill-[#ff8c00]/50' : 'text-[#ffc680] fill-[#ffc680]'"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              }
+            </div>
+            <span class="text-lg font-medium text-[#5c3d2e]">{{ book()!.rating }}</span>
+            <span class="text-[#8b7355]">({{ book()!.reviewCount.toLocaleString() }} reviews)</span>
+          </div>
+
+          <!-- Price -->
+          <div class="flex items-baseline gap-3 flex-wrap">
+            <span class="text-3xl font-bold text-[#d2691e]">${{ book()!.price.toFixed(2) }}</span>
+            @if (book()?.originalPrice) {
+              <span class="text-xl text-[#8b7355] line-through">
+                ${{ book()!.originalPrice!.toFixed(2) }}
+              </span>
+              <span class="px-2 py-1 bg-red-100 text-red-600 text-sm font-semibold rounded">
+                Save ${{ getSavings().toFixed(2) }}
+              </span>
+            }
+          </div>
+
+          <!-- Stock Status -->
+          <div class="flex items-center gap-2">
+            @if (book()!.inStock) {
+              <svg class="h-5 w-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span class="font-medium text-green-600">In Stock</span>
+              <span class="text-[#8b7355]">({{ book()!.stockCount }} available)</span>
+            } @else {
+              <svg class="h-5 w-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+              <span class="font-medium text-red-600">Out of Stock</span>
+            }
+          </div>
+
+          <!-- Quantity Selector -->
+          @if (book()!.inStock) {
+            <div class="flex flex-wrap items-center gap-4 pt-2">
+              <div class="flex items-center gap-3">
+                <span class="text-sm font-medium text-[#8b7355]">Quantity:</span>
+                <div class="flex items-center border border-[#5c3d2e]/30 rounded-lg overflow-hidden">
+                  <button
+                    (click)="decrementQuantity()"
+                    [disabled]="quantity() <= 1"
+                    class="px-3 py-2 text-[#5c3d2e] hover:bg-[#5c3d2e]/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  >
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
+                    </svg>
+                  </button>
+                  <span class="px-4 py-2 font-medium text-[#5c3d2e] min-w-[3rem] text-center">
+                    {{ quantity() }}
+                  </span>
+                  <button
+                    (click)="incrementQuantity()"
+                    [disabled]="quantity() >= book()!.stockCount"
+                    class="px-3 py-2 text-[#5c3d2e] hover:bg-[#5c3d2e]/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  >
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+
+          <!-- Action Buttons -->
+          <div class="flex flex-col sm:flex-row gap-3 pt-2">
+            <button
+              (click)="addToCart()"
+              [disabled]="!book()!.inStock"
+              class="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-[#ff8c00] text-white font-semibold rounded-lg hover:bg-[#e67e00] disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+            >
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+              Add to Cart
+            </button>
+          </div>
+
+          <!-- Shipping Info -->
+          <div class="grid sm:grid-cols-3 gap-4 pt-4 border-t border-[#5c3d2e]/20">
+            <div class="flex items-center gap-3">
+              <svg class="h-5 w-5 text-[#5c3d2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+              </svg>
+              <div>
+                <p class="text-sm font-medium text-[#5c3d2e]">Free Shipping</p>
+                <p class="text-xs text-[#8b7355]">On orders over $35</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <svg class="h-5 w-5 text-[#5c3d2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+              <div>
+                <p class="text-sm font-medium text-[#5c3d2e]">Secure Payment</p>
+                <p class="text-xs text-[#8b7355]">256-bit encryption</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <svg class="h-5 w-5 text-[#5c3d2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              </svg>
+              <div>
+                <p class="text-sm font-medium text-[#5c3d2e]">Easy Returns</p>
+                <p class="text-xs text-[#8b7355]">30-day return policy</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Store Info -->
+          <div class="pt-4 mt-4 border-t border-[#5c3d2e]/20">
+            <h3 class="text-sm font-semibold text-[#5c3d2e] mb-3">Store Info</h3>
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-full bg-[#5c3d2e]/10 flex items-center justify-center flex-shrink-0">
+                <svg class="h-6 w-6 text-[#5c3d2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <span class="font-medium text-[#5c3d2e]">{{ book()!.store }}</span>
+                <p class="text-sm text-[#8b7355]">Independent bookstore specializing in {{ book()!.category.toLowerCase() }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs Section -->
+      <div class="mb-16">
+        <!-- Tab Headers -->
+        <div class="flex gap-8 border-b border-[#5c3d2e]/20">
+          <button
+            (click)="setTab('description')"
+            class="pb-3 font-serif text-lg transition-colors cursor-pointer border-b-2 -mb-px"
+            [class]="activeTab() === 'description' ? 'border-[#ff8c00] text-[#ff8c00]' : 'border-transparent text-[#8b7355] hover:text-[#5c3d2e]'"
+          >
+            Description
+          </button>
+          <button
+            (click)="setTab('details')"
+            class="pb-3 font-serif text-lg transition-colors cursor-pointer border-b-2 -mb-px"
+            [class]="activeTab() === 'details' ? 'border-[#ff8c00] text-[#ff8c00]' : 'border-transparent text-[#8b7355] hover:text-[#5c3d2e]'"
+          >
+            Details
+          </button>
+          <button
+            (click)="setTab('reviews')"
+            class="pb-3 font-serif text-lg transition-colors cursor-pointer border-b-2 -mb-px"
+            [class]="activeTab() === 'reviews' ? 'border-[#ff8c00] text-[#ff8c00]' : 'border-transparent text-[#8b7355] hover:text-[#5c3d2e]'"
+          >
+            Reviews ({{ book()!.reviewCount }})
+          </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="pt-6">
+          @if (activeTab() === 'description') {
+            <p class="text-[#8b7355] leading-relaxed max-w-3xl">
+              {{ book()!.description }}
+            </p>
+          }
+
+          @if (activeTab() === 'details') {
+            <div class="grid sm:grid-cols-2 gap-4 max-w-2xl">
+              <div class="flex justify-between py-2 border-b border-[#5c3d2e]/20">
+                <span class="text-[#8b7355]">ISBN</span>
+                <span class="font-medium text-[#5c3d2e]">{{ book()!.isbn }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-[#5c3d2e]/20">
+                <span class="text-[#8b7355]">Publisher</span>
+                <span class="font-medium text-[#5c3d2e]">{{ book()!.publisher }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-[#5c3d2e]/20">
+                <span class="text-[#8b7355]">Publication Date</span>
+                <span class="font-medium text-[#5c3d2e]">{{ formatDate(book()!.publicationDate) }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-[#5c3d2e]/20">
+                <span class="text-[#8b7355]">Pages</span>
+                <span class="font-medium text-[#5c3d2e]">{{ book()!.pages }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-[#5c3d2e]/20">
+                <span class="text-[#8b7355]">Language</span>
+                <span class="font-medium text-[#5c3d2e]">{{ book()!.language }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-[#5c3d2e]/20">
+                <span class="text-[#8b7355]">Category</span>
+                <span class="font-medium text-[#5c3d2e]">{{ book()!.category }}</span>
+              </div>
+            </div>
+          }
+
+          @if (activeTab() === 'reviews') {
+            <p class="text-[#8b7355]">Reviews coming soon...</p>
+          }
+        </div>
+      </div>
+
+      <!-- Related Books -->
+      @if (relatedBooks().length > 0) {
+        <section>
+          <h2 class="text-2xl font-serif font-bold text-[#5c3d2e] mb-6">
+            You May Also Like
+          </h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            @for (relatedBook of relatedBooks(); track relatedBook.id) {
+              <app-book-card [book]="relatedBook"></app-book-card>
+            }
+          </div>
+        </section>
+      }
+    } @else {
+      <!-- Book Not Found -->
+      <div class="py-20 text-center">
+        <h1 class="text-2xl font-serif text-[#5c3d2e] mb-4">Book not found</h1>
+        <button
+          (click)="goBack()"
+          class="px-6 py-3 bg-[#ff8c00] text-white font-semibold rounded-lg hover:bg-[#e67e00] transition-colors cursor-pointer"
+        >
+          Browse Books
+        </button>
+      </div>
+    }
+  </main>
+
+  <app-footer></app-footer>
+</div>

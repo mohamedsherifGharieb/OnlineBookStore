@@ -1,0 +1,8 @@
+/* Browse page styles */
+input[type="checkbox"] {
+  accent-color: #ff8c00;
+}
+
+input[type="range"] {
+  accent-color: #ff8c00;
+}

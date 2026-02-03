@@ -20,12 +20,16 @@
   margin-bottom: 12px;
 }
 
-/* Fixed card height and body rules to prevent stretching */
 .book-card {
-  width: 320px;
-  height: 480px;
+  width: 100%;
+  height: 520px;
   display: flex;
   flex-direction: column;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.book-card:hover {
+  box-shadow: 0 0 20px rgba(255, 140, 0, 0.4), 0 0 40px rgba(255, 140, 0, 0.2);
 }
 
 .book-body {
