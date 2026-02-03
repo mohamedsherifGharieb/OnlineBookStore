@@ -24,7 +24,6 @@ img { object-fit: cover; width: 100%; height: 100%; }
 	background-color: transparent !important;
 }
 
-/* hero overlay gradient using provided palette */
 .hero-overlay {
 	pointer-events: none;
 	mix-blend-mode: multiply;
@@ -55,7 +54,10 @@ img { object-fit: cover; width: 100%; height: 100%; }
 
 /* badge icon color should match primary button */
 .hero-section .badge-icon { 
-		fill: #F7931A; 
+	fill: #e8830e; /* updated icon color */
+	color: #e8830e;
+	display: inline-block;
+	vertical-align: middle;
 }
 
 /* badge pill styling */
@@ -68,8 +70,10 @@ img { object-fit: cover; width: 100%; height: 100%; }
 }
 .hero-section .badge-pill .badge-icon {
 	display: block;
-	width: 1.25rem; /* 20px */
-	height: 1.25rem;
+	width: 1.5rem; /* 24px */
+	height: 1.5rem;
+	transform: scale(1.15);
+	transform-origin: center;
 }
 
 /* remove default blue focus shadow and replace with orange ring */

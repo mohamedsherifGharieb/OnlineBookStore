@@ -1,0 +1,25 @@
+/* About Section Styles */
+
+/* warm gradient background */
+.bg-warm-gradient {
+  background: linear-gradient(135deg, rgba(245, 245, 220, 0.5) 0%, rgba(255, 248, 220, 0.3) 100%);
+}
+
+/* card hover animation */
+.group {
+  perspective: 1000px;
+}
+
+/* icon container hover effect */
+.group:hover {
+  transform: translateY(-0.25rem);
+}
+
+/* smooth transitions */
+.transition-all {
+  transition: all 0.3s ease;
+}
+
+.transition-colors {
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
