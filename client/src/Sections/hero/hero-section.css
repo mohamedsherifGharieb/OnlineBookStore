@@ -1,0 +1,87 @@
+/* minimal local tweaks; main visuals come from Tailwind + DaisyUI */
+img { object-fit: cover; width: 100%; height: 100%; }
+
+/* background treatment: slight blur and gentle scale for soft focus */
+.hero-bg {
+	transform: scale(1.03);
+	filter: blur(4px) contrast(0.95) saturate(0.95);
+	-webkit-filter: blur(4px) contrast(0.95) saturate(0.95);
+}
+
+/* headline contrast boost for readability on warm overlay */
+.font-serif { text-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+
+@keyframes float { 0% { transform: translateY(0) } 50% { transform: translateY(-8px) } 100% { transform: translateY(0) } }
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-float-delayed { animation: float 8s ease-in-out infinite 1s; }
+.animate-float-slow { animation: float 12s ease-in-out infinite; }
+
+
+/* cream-outline: subtle cream border with white text for outlined secondary CTA */
+.cream-outline {
+	border-color: rgba(245,245,220,0.45) !important;
+	color: #ffffff !important;
+	background-color: transparent !important;
+}
+
+.hero-overlay {
+	pointer-events: none;
+	mix-blend-mode: multiply;
+	background: linear-gradient(135deg,
+		#d07431 0%,    
+		#ea7a18 60%,  
+		#e78e2f 100%     
+	);
+}
+
+/* primary CTA styles for hero (overrides DaisyUI where needed) */
+.hero-section .btn-primary {
+	background-color: #ff8c00 ;
+	border-color: #F7931A ;
+	color: #ffffff ;
+}
+.hero-section .btn-primary:hover {
+	background-color: #ff8c00 ; /* hover */
+	border-color: #E8840F ;
+}
+
+/* secondary outlined CTA with cream-like border/text color */
+.hero-section .cream-outline {
+	border-color: #ffffff ;
+	color: #ffffff ;
+	background-color: transparent;
+}
+
+/* badge icon color should match primary button */
+.hero-section .badge-icon { 
+	fill: #e8830e; /* updated icon color */
+	color: #e8830e;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+/* badge pill styling */
+.hero-section .badge-pill {
+	background-color: rgba(201,122,46,0.88) ; /* #C97A2E at ~88% */
+	border-radius: 999px ;
+	padding-left: 1rem; /* keep comfortable spacing */
+	padding-right: 1rem;
+	align-items: center;
+}
+.hero-section .badge-pill .badge-icon {
+	display: block;
+	width: 1.5rem; /* 24px */
+	height: 1.5rem;
+	transform: scale(1.15);
+	transform-origin: center;
+}
+
+/* remove default blue focus shadow and replace with orange ring */
+.hero-section .btn-primary,
+.hero-section .btn-primary:focus {
+	box-shadow: 0 10px 30px rgba(247,147,26,0.12);
+	outline: none ;
+}
+.hero-section .btn-primary:focus-visible {
+	box-shadow: 0 0 0 6px rgba(247,147,26,0.12) ;
+}

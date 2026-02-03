@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { AccountService } from '../Core/services/account-service';
-import { Home } from '../Features/home/home';
 import { Nav } from '../Layout/nav/nav';
+import { HeroSectionComponent } from '../Sections/hero/hero-section';
+import { AboutSectionComponent } from '../Sections/about/about-section';
 
 @Component({
   selector: 'app-root',
-  imports: [Nav],
+  imports: [Nav,HeroSectionComponent,AboutSectionComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

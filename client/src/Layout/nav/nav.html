@@ -1,9 +1,9 @@
-<header class="sticky top-0 z-50 w-full border-b bg-(--color-library-cream)/95 backdrop-blur">
+<header class="sticky top-0 z-50 w-full border-b backdrop-blur" style="background-color: #fffefb;">
   <div class="container mx-auto px-4">
     <div class="flex h-16 items-center justify-between gap-4">
       
       <!-- Logo -->
-      <a routerLink="/" class="flex items-center gap-2 text-(--color-library-orange)">
+      <a routerLink="/" class="flex items-center gap-2 text-(--color-library-brown)">
         <lucide-icon [img]="BookOpen" class="h-8 w-8"></lucide-icon>
         <span class="font-serif text-xl font-bold hidden sm:inline text-(--color-library-brown)">BookStore</span>
       </a>
@@ -20,16 +20,16 @@
       </nav>
 
       <!-- Search Bar (Desktop) -->
-      <div class="hidden md:flex flex-1 max-w-md mx-4">
+      <div class="hidden md:flex flex-1 max-w-md mx-4 bg-(--color-library-cream)">
         <div class="relative w-full">
           <lucide-icon 
             [img]="Search" 
-            class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-(--color-library-brown)/50"
+            class="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-(--color-library-brown)/50"
           ></lucide-icon>
           <input
             type="search"
             placeholder="Search for books, authors, stores..."
-            class="w-full pl-10 pr-4 py-2 rounded-md border border-(--color-library-brown)/30 bg-white focus:outline-none focus:border-(--color-library-orange) focus:ring-1 focus:ring-(--color-library-orange)"
+            class="w-full pl-10 pr-4 py-2 rounded-md border border-(--color-library-brown)/30 bg-cream focus:outline-none focus:border-(--color-library-brown) focus:ring-1 focus:ring-(--color-library-orange)"
           />
         </div>
       </div>
@@ -61,7 +61,7 @@
           </button>
           <button 
             (click)="onSignUp()"
-            class="px-4 py-2 bg-(--color-library-orange) text-white rounded-md hover:bg-(--color-library-orange-light) transition-colors"
+            class="px-4 py-2 bg-[#ff8c00] hover:bg-[#e8840f] text-white rounded-md transition-colors"
           >
             Sign Up
           </button>
