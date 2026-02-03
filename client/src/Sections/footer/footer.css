@@ -1,0 +1,15 @@
+/* Link hover transitions */
+a {
+  transition: color 0.2s ease;
+}
+
+/* Social icon hover */
+.social-icon:hover {
+  transform: scale(1.05);
+}
+
+/* Newsletter input focus */
+input:focus {
+  outline: none;
+  border-color: #ff8c00;
+}
