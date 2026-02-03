@@ -1,0 +1,406 @@
+<div class="min-h-screen bg-[#fffbeb]">
+  <main class="container mx-auto px-4 py-8">
+    <div class="space-y-6">
+      <!-- Header -->
+      <div>
+        <h1 class="text-3xl font-serif font-bold text-[#5c3d2e]">Settings</h1>
+        <p class="text-[#8b7355] mt-1">Manage your store preferences and configuration</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="space-y-6">
+        <!-- Tab List -->
+        <div class="grid grid-cols-2 lg:grid-cols-5 gap-2">
+          <button
+            (click)="setActiveTab('notifications')"
+            class="px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2"
+            [ngClass]="activeTab() === 'notifications' 
+              ? 'bg-[#5c3d2e] text-white' 
+              : 'bg-white border border-[#5c3d2e]/20 text-[#5c3d2e] hover:bg-[#5c3d2e]/5'"
+          >
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <span class="hidden sm:inline">Notifications</span>
+          </button>
+          <button
+            (click)="setActiveTab('shipping')"
+            class="px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2"
+            [ngClass]="activeTab() === 'shipping' 
+              ? 'bg-[#5c3d2e] text-white' 
+              : 'bg-white border border-[#5c3d2e]/20 text-[#5c3d2e] hover:bg-[#5c3d2e]/5'"
+          >
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>
+            </svg>
+            <span class="hidden sm:inline">Shipping</span>
+          </button>
+          <button
+            (click)="setActiveTab('payments')"
+            class="px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2"
+            [ngClass]="activeTab() === 'payments' 
+              ? 'bg-[#5c3d2e] text-white' 
+              : 'bg-white border border-[#5c3d2e]/20 text-[#5c3d2e] hover:bg-[#5c3d2e]/5'"
+          >
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+            </svg>
+            <span class="hidden sm:inline">Payments</span>
+          </button>
+          <button
+            (click)="setActiveTab('security')"
+            class="px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2"
+            [ngClass]="activeTab() === 'security' 
+              ? 'bg-[#5c3d2e] text-white' 
+              : 'bg-white border border-[#5c3d2e]/20 text-[#5c3d2e] hover:bg-[#5c3d2e]/5'"
+          >
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+            <span class="hidden sm:inline">Security</span>
+          </button>
+          <button
+            (click)="setActiveTab('danger')"
+            class="px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2"
+            [ngClass]="activeTab() === 'danger' 
+              ? 'bg-red-600 text-white' 
+              : 'bg-white border border-[#5c3d2e]/20 text-[#5c3d2e] hover:bg-red-50'"
+          >
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+            <span class="hidden sm:inline">Danger Zone</span>
+          </button>
+        </div>
+
+        <!-- Tab Content -->
+        
+        <!-- Notifications Tab -->
+        @if (activeTab() === 'notifications') {
+          <div class="bg-white rounded-xl border border-[#5c3d2e]/20 shadow-sm">
+            <div class="p-6 border-b border-[#5c3d2e]/10">
+              <h2 class="text-lg font-serif font-semibold text-[#5c3d2e] flex items-center gap-2">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
+                Notification Preferences
+              </h2>
+              <p class="text-sm text-[#8b7355]">Choose what notifications you'd like to receive</p>
+            </div>
+            <div class="p-6 space-y-6">
+              <div class="space-y-4">
+                @for (item of notificationItems; track item.key) {
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <label class="font-medium text-[#5c3d2e] cursor-pointer">{{ item.label }}</label>
+                      <p class="text-sm text-[#8b7355]">{{ item.desc }}</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input 
+                        type="checkbox"
+                        [checked]="notifications()[item.key]"
+                        (change)="toggleNotification(item.key)"
+                        class="sr-only peer"
+                      />
+                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#ff8c00]/20 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#ff8c00]"></div>
+                    </label>
+                  </div>
+                }
+              </div>
+
+              <button 
+                (click)="saveNotifications()"
+                class="px-4 py-2 bg-[#5c3d2e] text-white rounded-lg hover:bg-[#4a2f23] transition-colors flex items-center gap-2"
+              >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+                </svg>
+                Save Preferences
+              </button>
+            </div>
+          </div>
+        }
+
+        <!-- Shipping Tab -->
+        @if (activeTab() === 'shipping') {
+          <div class="bg-white rounded-xl border border-[#5c3d2e]/20 shadow-sm">
+            <div class="p-6 border-b border-[#5c3d2e]/10">
+              <h2 class="text-lg font-serif font-semibold text-[#5c3d2e] flex items-center gap-2">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>
+                </svg>
+                Shipping Settings
+              </h2>
+              <p class="text-sm text-[#8b7355]">Configure your shipping rates and options</p>
+            </div>
+            <div class="p-6 space-y-6">
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-[#5c3d2e]">Free Shipping Threshold ($)</label>
+                  <input 
+                    type="number"
+                    [(ngModel)]="shipping().freeShippingThreshold"
+                    class="w-full px-3 py-2 border border-[#5c3d2e]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00] focus:border-transparent"
+                  />
+                  <p class="text-xs text-[#8b7355]">Orders above this amount get free shipping</p>
+                </div>
+
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-[#5c3d2e]">Processing Time (days)</label>
+                  <select 
+                    [(ngModel)]="shipping().processingDays"
+                    class="w-full px-3 py-2 border border-[#5c3d2e]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00] focus:border-transparent bg-white"
+                  >
+                    <option value="1">1 business day</option>
+                    <option value="2">2 business days</option>
+                    <option value="3">3 business days</option>
+                    <option value="5">5 business days</option>
+                  </select>
+                </div>
+
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-[#5c3d2e]">Standard Shipping Rate ($)</label>
+                  <input 
+                    type="number"
+                    step="0.01"
+                    [(ngModel)]="shipping().standardRate"
+                    class="w-full px-3 py-2 border border-[#5c3d2e]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00] focus:border-transparent"
+                  />
+                </div>
+
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-[#5c3d2e]">Express Shipping Rate ($)</label>
+                  <input 
+                    type="number"
+                    step="0.01"
+                    [(ngModel)]="shipping().expressRate"
+                    class="w-full px-3 py-2 border border-[#5c3d2e]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00] focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              <button 
+                (click)="saveShipping()"
+                class="px-4 py-2 bg-[#5c3d2e] text-white rounded-lg hover:bg-[#4a2f23] transition-colors flex items-center gap-2"
+              >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+                </svg>
+                Save Shipping Settings
+              </button>
+            </div>
+          </div>
+        }
+
+        <!-- Payments Tab -->
+        @if (activeTab() === 'payments') {
+          <div class="bg-white rounded-xl border border-[#5c3d2e]/20 shadow-sm">
+            <div class="p-6 border-b border-[#5c3d2e]/10">
+              <h2 class="text-lg font-serif font-semibold text-[#5c3d2e] flex items-center gap-2">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                </svg>
+                Payment Settings
+              </h2>
+              <p class="text-sm text-[#8b7355]">Manage your payment methods and payout preferences</p>
+            </div>
+            <div class="p-6 space-y-6">
+              <div class="p-4 bg-[#5c3d2e]/5 rounded-lg">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-12 h-8 bg-gradient-to-r from-blue-600 to-blue-400 rounded flex items-center justify-center text-white text-xs font-bold">
+                      VISA
+                    </div>
+                    <div>
+                      <p class="font-medium text-[#5c3d2e]">•••• •••• •••• 4242</p>
+                      <p class="text-xs text-[#8b7355]">Expires 12/26</p>
+                    </div>
+                  </div>
+                  <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Default</span>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-[#5c3d2e]">PayPal Email for Payouts</label>
+                  <input 
+                    type="email"
+                    [(ngModel)]="payoutEmail"
+                    placeholder="your@email.com"
+                    class="w-full px-3 py-2 border border-[#5c3d2e]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00] focus:border-transparent"
+                  />
+                </div>
+
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-[#5c3d2e]">Payout Schedule</label>
+                  <select 
+                    [(ngModel)]="payoutSchedule"
+                    class="w-full px-3 py-2 border border-[#5c3d2e]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00] focus:border-transparent bg-white"
+                  >
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="biweekly">Bi-weekly</option>
+                    <option value="monthly">Monthly</option>
+                  </select>
+                </div>
+              </div>
+
+              <button 
+                (click)="savePayment()"
+                class="px-4 py-2 bg-[#5c3d2e] text-white rounded-lg hover:bg-[#4a2f23] transition-colors flex items-center gap-2"
+              >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+                </svg>
+                Save Payment Settings
+              </button>
+            </div>
+          </div>
+        }
+
+        <!-- Security Tab -->
+        @if (activeTab() === 'security') {
+          <div class="bg-white rounded-xl border border-[#5c3d2e]/20 shadow-sm">
+            <div class="p-6 border-b border-[#5c3d2e]/10">
+              <h2 class="text-lg font-serif font-semibold text-[#5c3d2e] flex items-center gap-2">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+                Security Settings
+              </h2>
+              <p class="text-sm text-[#8b7355]">Manage your account security and authentication</p>
+            </div>
+            <div class="p-6 space-y-6">
+              <div class="space-y-4">
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-[#5c3d2e]">Current Password</label>
+                  <input 
+                    type="password"
+                    [(ngModel)]="currentPassword"
+                    class="w-full px-3 py-2 border border-[#5c3d2e]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00] focus:border-transparent"
+                  />
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4">
+                  <div class="space-y-2">
+                    <label class="block text-sm font-medium text-[#5c3d2e]">New Password</label>
+                    <input 
+                      type="password"
+                      [(ngModel)]="newPassword"
+                      class="w-full px-3 py-2 border border-[#5c3d2e]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00] focus:border-transparent"
+                    />
+                  </div>
+                  <div class="space-y-2">
+                    <label class="block text-sm font-medium text-[#5c3d2e]">Confirm New Password</label>
+                    <input 
+                      type="password"
+                      [(ngModel)]="confirmPassword"
+                      class="w-full px-3 py-2 border border-[#5c3d2e]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00] focus:border-transparent"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between p-4 bg-[#5c3d2e]/5 rounded-lg">
+                <div class="flex items-center gap-3">
+                  <svg class="h-5 w-5 text-[#8b7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                  </svg>
+                  <div>
+                    <p class="font-medium text-[#5c3d2e]">Two-Factor Authentication</p>
+                    <p class="text-sm text-[#8b7355]">Add an extra layer of security</p>
+                  </div>
+                </div>
+                <button 
+                  (click)="enableTwoFactor()"
+                  class="px-4 py-2 border border-[#5c3d2e]/20 text-[#5c3d2e] rounded-lg hover:bg-[#5c3d2e]/5 transition-colors"
+                >
+                  Enable
+                </button>
+              </div>
+
+              <button 
+                (click)="updatePassword()"
+                class="px-4 py-2 bg-[#5c3d2e] text-white rounded-lg hover:bg-[#4a2f23] transition-colors flex items-center gap-2"
+              >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+                </svg>
+                Update Password
+              </button>
+            </div>
+          </div>
+        }
+
+        <!-- Danger Zone Tab -->
+        @if (activeTab() === 'danger') {
+          <div class="bg-white rounded-xl border border-red-200 shadow-sm">
+            <div class="p-6 border-b border-red-200">
+              <h2 class="text-lg font-serif font-semibold text-red-600 flex items-center gap-2">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                Danger Zone
+              </h2>
+              <p class="text-sm text-[#8b7355]">Irreversible actions that affect your store</p>
+            </div>
+            <div class="p-6 space-y-4">
+              <div class="flex items-center justify-between p-4 border border-red-200 rounded-lg">
+                <div>
+                  <p class="font-medium text-[#5c3d2e]">Pause Store</p>
+                  <p class="text-sm text-[#8b7355]">Temporarily hide your store from customers</p>
+                </div>
+                <button 
+                  (click)="pauseStore()"
+                  class="px-4 py-2 border border-[#5c3d2e]/20 text-[#5c3d2e] rounded-lg hover:bg-[#5c3d2e]/5 transition-colors"
+                >
+                  Pause
+                </button>
+              </div>
+
+              <div class="flex items-center justify-between p-4 border border-red-200 rounded-lg">
+                <div>
+                  <p class="font-medium text-red-600">Delete Store</p>
+                  <p class="text-sm text-[#8b7355]">Permanently delete your store and all data</p>
+                </div>
+                <button 
+                  (click)="openDeleteDialog()"
+                  class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                >
+                  Delete Store
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Dialog -->
+    @if (showDeleteDialog()) {
+      <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" (click)="closeDeleteDialog()">
+        <div class="bg-white rounded-xl max-w-md w-full shadow-xl" (click)="$event.stopPropagation()">
+          <div class="p-6">
+            <h2 class="text-xl font-bold text-[#5c3d2e] mb-2">Are you absolutely sure?</h2>
+            <p class="text-sm text-[#8b7355] mb-6">
+              This action cannot be undone. This will permanently delete your store, all your books, orders, and customer data.
+            </p>
+            <div class="flex gap-3">
+              <button 
+                (click)="closeDeleteDialog()"
+                class="flex-1 px-4 py-2 border border-[#5c3d2e]/20 text-[#5c3d2e] rounded-lg hover:bg-[#5c3d2e]/5 transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                (click)="deleteStore()"
+                class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Delete Store
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </main>

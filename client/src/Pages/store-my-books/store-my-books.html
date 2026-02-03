@@ -1,0 +1,169 @@
+<div class="min-h-screen bg-[#fffbeb]">
+  <app-nav></app-nav>
+
+  <main class="container mx-auto px-4 py-8">
+    <!-- Page Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-serif font-bold text-[#5c3d2e]">
+          My Books
+        </h1>
+        <p class="text-[#8b7355]">
+          Manage your book listings and inventory
+        </p>
+      </div>
+      <button 
+        (click)="addNewBook()"
+        class="px-4 py-2 bg-[#ff8c00] text-white font-semibold rounded-lg hover:bg-[#e67e00] transition-colors cursor-pointer flex items-center gap-2"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Add New Book
+      </button>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="bg-white rounded-xl border border-[#5c3d2e]/20 shadow-sm mb-6">
+      <div class="p-4">
+        <div class="flex flex-col sm:flex-row gap-4">
+          <div class="relative flex-1">
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#8b7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <input
+              type="text"
+              [(ngModel)]="searchQuery"
+              placeholder="Search books..."
+              class="w-full pl-10 pr-3 py-2 border border-[#5c3d2e]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00] focus:border-transparent bg-white"
+            />
+          </div>
+          <button 
+            (click)="filterByCategory()"
+            class="px-4 py-2 border border-[#5c3d2e]/20 bg-white text-[#5c3d2e] rounded-lg hover:bg-[#5c3d2e]/5 transition-colors cursor-pointer"
+          >
+            All Categories
+          </button>
+          <button 
+            (click)="filterByStatus()"
+            class="px-4 py-2 border border-[#5c3d2e]/20 bg-white text-[#5c3d2e] rounded-lg hover:bg-[#5c3d2e]/5 transition-colors cursor-pointer"
+          >
+            All Status
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Books Table -->
+    <div class="bg-white rounded-xl border border-[#5c3d2e]/20 shadow-sm">
+      <div class="p-6 border-b border-[#5c3d2e]/10">
+        <h2 class="text-xl font-serif font-semibold text-[#5c3d2e]">
+          All Books ({{ books().length }})
+        </h2>
+      </div>
+      <div class="p-6">
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="border-b border-[#5c3d2e]/10">
+                <th class="text-left py-3 px-2 text-sm font-semibold text-[#5c3d2e] w-20">Cover</th>
+                <th class="text-left py-3 px-2 text-sm font-semibold text-[#5c3d2e]">Title</th>
+                <th class="text-left py-3 px-2 text-sm font-semibold text-[#5c3d2e] hidden md:table-cell">Category</th>
+                <th class="text-left py-3 px-2 text-sm font-semibold text-[#5c3d2e]">Price</th>
+                <th class="text-left py-3 px-2 text-sm font-semibold text-[#5c3d2e] hidden sm:table-cell">Stock</th>
+                <th class="text-left py-3 px-2 text-sm font-semibold text-[#5c3d2e]">Status</th>
+                <th class="text-left py-3 px-2 text-sm font-semibold text-[#5c3d2e] w-10"></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (book of books(); track book.id) {
+                <tr class="border-b border-[#5c3d2e]/10 hover:bg-[#5c3d2e]/5 transition-colors">
+                  <td class="py-4 px-2">
+                    <div class="w-12 h-16 rounded overflow-hidden bg-[#5c3d2e]/10">
+                      <img
+                        [src]="book.coverUrl"
+                        [alt]="book.title"
+                        class="w-full h-full object-cover"
+                      />
+                    </div>
+                  </td>
+                  <td class="py-4 px-2">
+                    <div>
+                      <p class="font-medium line-clamp-1 text-[#5c3d2e]">{{ book.title }}</p>
+                      <p class="text-sm text-[#8b7355]">{{ book.author }}</p>
+                    </div>
+                  </td>
+                  <td class="py-4 px-2 hidden md:table-cell">
+                    <span class="inline-block px-2 py-1 text-xs font-medium rounded-full bg-[#5c3d2e]/10 text-[#5c3d2e]">
+                      {{ book.category }}
+                    </span>
+                  </td>
+                  <td class="py-4 px-2 font-medium text-[#5c3d2e]">${{ book.price.toFixed(2) }}</td>
+                  <td class="py-4 px-2 hidden sm:table-cell">
+                    @if (book.inStock) {
+                      <span class="text-green-600">{{ book.stockCount }}</span>
+                    } @else {
+                      <span class="text-red-600">0</span>
+                    }
+                  </td>
+                  <td class="py-4 px-2">
+                    <span 
+                      class="inline-block px-2 py-1 text-xs font-medium rounded-full border"
+                      [ngClass]="book.inStock 
+                        ? 'bg-green-100 text-green-700 border-green-200' 
+                        : 'bg-red-100 text-red-700 border-red-200'"
+                    >
+                      {{ book.inStock ? 'Active' : 'Out of Stock' }}
+                    </span>
+                  </td>
+                  <td class="py-4 px-2 relative">
+                    <button 
+                      (click)="toggleDropdown(book.id)"
+                      class="h-8 w-8 hover:bg-[#5c3d2e]/10 rounded-lg transition-colors cursor-pointer flex items-center justify-center"
+                    >
+                      <svg class="h-4 w-4 text-[#5c3d2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+                      </svg>
+                    </button>
+                    
+                    @if (showDropdown() === book.id) {
+                      <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg border border-[#5c3d2e]/20 shadow-lg z-10">
+                        <button 
+                          (click)="editBook(book.id)"
+                          class="w-full text-left px-4 py-2 text-sm text-[#5c3d2e] hover:bg-[#5c3d2e]/5 transition-colors cursor-pointer first:rounded-t-lg flex items-center gap-2"
+                        >
+                          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                          </svg>
+                          Edit
+                        </button>
+                        <button 
+                          (click)="viewBookDetails(book.id)"
+                          class="w-full text-left px-4 py-2 text-sm text-[#5c3d2e] hover:bg-[#5c3d2e]/5 transition-colors cursor-pointer"
+                        >
+                          View Details
+                        </button>
+                        <div class="border-t border-[#5c3d2e]/10"></div>
+                        <button 
+                          (click)="deleteBook(book.id)"
+                          class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors cursor-pointer last:rounded-b-lg flex items-center gap-2"
+                        >
+                          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                          </svg>
+                          Delete
+                        </button>
+                      </div>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <app-footer></app-footer>
+</div>

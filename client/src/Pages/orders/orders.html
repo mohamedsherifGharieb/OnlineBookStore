@@ -1,0 +1,133 @@
+<div class="min-h-screen bg-[#fffbeb]">
+  <app-nav></app-nav>
+
+  <main class="container mx-auto px-4 py-8">
+    <!-- Page Header -->
+    <div class="mb-8">
+      <h1 class="text-2xl md:text-3xl font-serif font-bold text-[#5c3d2e]">
+        Order History
+      </h1>
+      <p class="text-[#8b7355]">
+        View and track your past orders
+      </p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid sm:grid-cols-3 gap-4 mb-8">
+      <!-- Total Orders -->
+      <div class="bg-white rounded-xl border border-[#5c3d2e]/20 p-4 text-center shadow-sm">
+        <p class="text-2xl font-bold text-[#5c3d2e]">{{ totalOrders() }}</p>
+        <p class="text-sm text-[#8b7355]">Total Orders</p>
+      </div>
+      <!-- Delivered -->
+      <div class="bg-white rounded-xl border border-[#5c3d2e]/20 p-4 text-center shadow-sm">
+        <p class="text-2xl font-bold text-green-600">{{ deliveredCount() }}</p>
+        <p class="text-sm text-[#8b7355]">Delivered</p>
+      </div>
+      <!-- In Progress -->
+      <div class="bg-white rounded-xl border border-[#5c3d2e]/20 p-4 text-center shadow-sm">
+        <p class="text-2xl font-bold text-[#ff8c00]">{{ inProgressCount() }}</p>
+        <p class="text-sm text-[#8b7355]">In Progress</p>
+      </div>
+    </div>
+
+    <!-- Orders Table Card -->
+    <div class="bg-white rounded-xl border border-[#5c3d2e]/20 shadow-sm overflow-hidden">
+      <!-- Card Header -->
+      <div class="p-6 border-b border-[#5c3d2e]/10">
+        <h2 class="text-xl font-serif font-semibold text-[#5c3d2e]">All Orders</h2>
+      </div>
+
+      <!-- Card Content -->
+      <div class="p-6">
+        @if (orders().length > 0) {
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr class="border-b border-[#5c3d2e]/10">
+                  <th class="text-left py-3 px-2 text-sm font-semibold text-[#5c3d2e]">Order ID</th>
+                  <th class="text-left py-3 px-2 text-sm font-semibold text-[#5c3d2e] hidden sm:table-cell">Date</th>
+                  <th class="text-left py-3 px-2 text-sm font-semibold text-[#5c3d2e]">Items</th>
+                  <th class="text-left py-3 px-2 text-sm font-semibold text-[#5c3d2e] hidden md:table-cell">Store</th>
+                  <th class="text-left py-3 px-2 text-sm font-semibold text-[#5c3d2e]">Total</th>
+                  <th class="text-left py-3 px-2 text-sm font-semibold text-[#5c3d2e]">Status</th>
+                  <th class="text-left py-3 px-2 text-sm font-semibold text-[#5c3d2e] w-24">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (order of orders(); track order.id) {
+                  <tr class="border-b border-[#5c3d2e]/10 hover:bg-[#5c3d2e]/5 transition-colors">
+                    <td class="py-4 px-2 font-medium text-[#5c3d2e]">{{ order.id }}</td>
+                    <td class="py-4 px-2 text-[#8b7355] hidden sm:table-cell">{{ formatDate(order.date) }}</td>
+                    <td class="py-4 px-2">
+                      <div class="max-w-[200px]">
+                        <p class="truncate text-[#5c3d2e]">{{ order.items.join(', ') }}</p>
+                        <p class="text-xs text-[#8b7355]">{{ getItemCount(order.items) }}</p>
+                      </div>
+                    </td>
+                    <td class="py-4 px-2 text-[#8b7355] hidden md:table-cell">{{ order.store }}</td>
+                    <td class="py-4 px-2 font-medium text-[#5c3d2e]">{{ order.total }}</td>
+                    <td class="py-4 px-2">
+                      <span 
+                        class="inline-block px-2 py-1 text-xs font-medium rounded-full border capitalize"
+                        [class]="getStatusClasses(order.status)"
+                      >
+                        {{ order.status }}
+                      </span>
+                    </td>
+                    <td class="py-4 px-2">
+                      <div class="flex gap-1">
+                        <!-- View Button -->
+                        <button 
+                          (click)="viewOrder(order.id)"
+                          class="p-2 hover:bg-[#5c3d2e]/10 rounded-lg transition-colors cursor-pointer"
+                          title="View Order"
+                        >
+                          <svg class="h-4 w-4 text-[#5c3d2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                          </svg>
+                        </button>
+                        <!-- Track Button (only for shipped orders) -->
+                        @if (order.status === 'shipped') {
+                          <button 
+                            (click)="trackOrder(order.id)"
+                            class="p-2 hover:bg-[#5c3d2e]/10 rounded-lg transition-colors cursor-pointer"
+                            title="Track Package"
+                          >
+                            <svg class="h-4 w-4 text-[#5c3d2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                            </svg>
+                          </button>
+                        }
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <!-- Empty State -->
+          <div class="text-center py-12">
+            <svg class="h-12 w-12 mx-auto text-[#8b7355] mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+            </svg>
+            <h3 class="text-lg font-medium text-[#5c3d2e] mb-2">No orders yet</h3>
+            <p class="text-[#8b7355] mb-6">
+              You haven't placed any orders yet. Start browsing our collection!
+            </p>
+            <button 
+              (click)="browsBooks()"
+              class="px-6 py-3 bg-[#ff8c00] text-white font-semibold rounded-lg hover:bg-[#e67e00] transition-colors cursor-pointer"
+            >
+              Browse Books
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  </main>
+
+  <app-footer></app-footer>
+</div>

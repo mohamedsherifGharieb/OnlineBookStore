@@ -215,7 +215,7 @@ export class BrowsePage {
     }
   }
 
-  isCategorySelected(category: string): boolean {
+  isCategorySelected(category: string): boolean {   
     return this.selectedCategories().includes(category);
   }
 

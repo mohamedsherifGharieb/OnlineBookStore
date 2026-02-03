@@ -1,0 +1,292 @@
+<div class="min-h-screen bg-[#fffbeb]">
+  <app-nav></app-nav>
+
+  <main class="container mx-auto px-4 py-8">
+    <div class="space-y-6">
+      <!-- Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 class="text-3xl font-serif font-bold text-[#5c3d2e]">My Store</h1>
+          <p class="text-[#8b7355] mt-1">Manage your store information and settings</p>
+        </div>
+        <div class="flex gap-2">
+          <button 
+            (click)="previewStore()"
+            class="px-4 py-2 border border-[#5c3d2e]/20 bg-white text-[#5c3d2e] rounded-lg hover:bg-[#5c3d2e]/5 transition-colors cursor-pointer flex items-center gap-2"
+          >
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+            </svg>
+            Preview Store
+          </button>
+          @if (isEditing()) {
+            <button 
+              (click)="handleSave()"
+              class="px-4 py-2 bg-[#ff8c00] text-white rounded-lg hover:bg-[#e67e00] transition-colors cursor-pointer flex items-center gap-2"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+              </svg>
+              Save Changes
+            </button>
+          } @else {
+            <button 
+              (click)="toggleEdit()"
+              class="px-4 py-2 bg-[#5c3d2e] text-white rounded-lg hover:bg-[#4a2f23] transition-colors cursor-pointer"
+            >
+              Edit Store
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Store Stats -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <!-- Rating -->
+        <div class="bg-white rounded-xl border border-[#5c3d2e]/20 shadow-sm p-4 flex items-center gap-3">
+          <div class="p-2 rounded-lg bg-[#5c3d2e]/10">
+            <svg class="h-5 w-5 text-[#5c3d2e]" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+            </svg>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-[#5c3d2e]">{{ storeData().rating }}</p>
+            <p class="text-xs text-[#8b7355]">{{ storeData().totalReviews }} reviews</p>
+          </div>
+        </div>
+
+        <!-- Books Listed -->
+        <div class="bg-white rounded-xl border border-[#5c3d2e]/20 shadow-sm p-4 flex items-center gap-3">
+          <div class="p-2 rounded-lg bg-[#ff8c00]/10">
+            <svg class="h-5 w-5 text-[#ff8c00]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+            </svg>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-[#5c3d2e]">{{ storeData().totalBooks }}</p>
+            <p class="text-xs text-[#8b7355]">Books listed</p>
+          </div>
+        </div>
+
+        <!-- Total Orders -->
+        <div class="bg-white rounded-xl border border-[#5c3d2e]/20 shadow-sm p-4 flex items-center gap-3">
+          <div class="p-2 rounded-lg bg-green-500/10">
+            <svg class="h-5 w-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+            </svg>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-[#5c3d2e]">{{ storeData().totalOrders.toLocaleString() }}</p>
+            <p class="text-xs text-[#8b7355]">Total orders</p>
+          </div>
+        </div>
+
+        <!-- Joined Date -->
+        <div class="bg-white rounded-xl border border-[#5c3d2e]/20 shadow-sm p-4 flex items-center gap-3">
+          <div class="p-2 rounded-lg bg-blue-500/10">
+            <svg class="h-5 w-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-[#5c3d2e]">Since {{ storeData().joinedDate }}</p>
+            @if (storeData().verified) {
+              <span class="inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-700">
+                Verified
+              </span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-6">
+        <!-- Store Branding -->
+        <div class="lg:col-span-1 bg-white rounded-xl border border-[#5c3d2e]/20 shadow-sm">
+          <div class="p-6 border-b border-[#5c3d2e]/10">
+            <h2 class="text-lg font-serif font-semibold text-[#5c3d2e]">Store Branding</h2>
+            <p class="text-sm text-[#8b7355]">Your store's visual identity</p>
+          </div>
+          <div class="p-6 space-y-6">
+            <!-- Logo -->
+            <div class="space-y-2">
+              <label class="text-sm font-medium text-[#5c3d2e]">Store Logo</label>
+              <div class="relative w-32 h-32 mx-auto">
+                <img
+                  [src]="storeData().logo"
+                  alt="Store logo"
+                  class="w-full h-full object-cover rounded-xl border-2 border-dashed border-[#5c3d2e]/20"
+                />
+                @if (isEditing()) {
+                  <button
+                    (click)="uploadLogo()"
+                    class="absolute bottom-0 right-0 h-8 w-8 rounded-full bg-[#5c3d2e] text-white hover:bg-[#4a2f23] transition-colors cursor-pointer flex items-center justify-center"
+                  >
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                  </button>
+                }
+              </div>
+            </div>
+
+            <!-- Banner -->
+            <div class="space-y-2">
+              <label class="text-sm font-medium text-[#5c3d2e]">Store Banner</label>
+              <div class="relative aspect-[3/1] w-full">
+                <img
+                  [src]="storeData().banner"
+                  alt="Store banner"
+                  class="w-full h-full object-cover rounded-lg border-2 border-dashed border-[#5c3d2e]/20"
+                />
+                @if (isEditing()) {
+                  <button
+                    (click)="uploadBanner()"
+                    class="absolute bottom-2 right-2 h-8 w-8 rounded-full bg-[#5c3d2e] text-white hover:bg-[#4a2f23] transition-colors cursor-pointer flex items-center justify-center"
+                  >
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Store Information -->
+        <div class="lg:col-span-2 bg-white rounded-xl border border-[#5c3d2e]/20 shadow-sm">
+          <div class="p-6 border-b border-[#5c3d2e]/10">
+            <h2 class="text-lg font-serif font-semibold text-[#5c3d2e]">Store Information</h2>
+            <p class="text-sm text-[#8b7355]">Basic information about your store</p>
+          </div>
+          <div class="p-6 space-y-4">
+            <!-- Store Name -->
+            <div class="space-y-2">
+              <label for="name" class="block text-sm font-medium text-[#5c3d2e]">Store Name</label>
+              @if (isEditing()) {
+                <input
+                  id="name"
+                  type="text"
+                  [(ngModel)]="formData().name"
+                  class="w-full px-3 py-2 border border-[#5c3d2e]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00] focus:border-transparent"
+                />
+              } @else {
+                <div class="flex items-center gap-2 p-2 bg-[#5c3d2e]/5 rounded-md">
+                  <svg class="h-4 w-4 text-[#8b7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                  </svg>
+                  <span class="text-[#5c3d2e]">{{ formData().name }}</span>
+                </div>
+              }
+            </div>
+
+            <!-- Description -->
+            <div class="space-y-2">
+              <label for="description" class="block text-sm font-medium text-[#5c3d2e]">Description</label>
+              @if (isEditing()) {
+                <textarea
+                  id="description"
+                  [(ngModel)]="formData().description"
+                  rows="4"
+                  class="w-full px-3 py-2 border border-[#5c3d2e]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00] focus:border-transparent"
+                ></textarea>
+              } @else {
+                <div class="p-2 bg-[#5c3d2e]/5 rounded-md text-sm text-[#5c3d2e]">
+                  {{ formData().description }}
+                </div>
+              }
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-4">
+              <!-- Email -->
+              <div class="space-y-2">
+                <label for="email" class="block text-sm font-medium text-[#5c3d2e]">Email</label>
+                @if (isEditing()) {
+                  <input
+                    id="email"
+                    type="email"
+                    [(ngModel)]="formData().email"
+                    class="w-full px-3 py-2 border border-[#5c3d2e]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00] focus:border-transparent"
+                  />
+                } @else {
+                  <div class="flex items-center gap-2 p-2 bg-[#5c3d2e]/5 rounded-md text-sm">
+                    <svg class="h-4 w-4 text-[#8b7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    <span class="text-[#5c3d2e]">{{ formData().email }}</span>
+                  </div>
+                }
+              </div>
+
+              <!-- Phone -->
+              <div class="space-y-2">
+                <label for="phone" class="block text-sm font-medium text-[#5c3d2e]">Phone</label>
+                @if (isEditing()) {
+                  <input
+                    id="phone"
+                    type="tel"
+                    [(ngModel)]="formData().phone"
+                    class="w-full px-3 py-2 border border-[#5c3d2e]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00] focus:border-transparent"
+                  />
+                } @else {
+                  <div class="flex items-center gap-2 p-2 bg-[#5c3d2e]/5 rounded-md text-sm">
+                    <svg class="h-4 w-4 text-[#8b7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                    </svg>
+                    <span class="text-[#5c3d2e]">{{ formData().phone }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Address -->
+            <div class="space-y-2">
+              <label for="address" class="block text-sm font-medium text-[#5c3d2e]">Address</label>
+              @if (isEditing()) {
+                <input
+                  id="address"
+                  type="text"
+                  [(ngModel)]="formData().address"
+                  class="w-full px-3 py-2 border border-[#5c3d2e]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00] focus:border-transparent"
+                />
+              } @else {
+                <div class="flex items-center gap-2 p-2 bg-[#5c3d2e]/5 rounded-md text-sm">
+                  <svg class="h-4 w-4 text-[#8b7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  </svg>
+                  <span class="text-[#5c3d2e]">{{ formData().address }}</span>
+                </div>
+              }
+            </div>
+
+            <!-- Website -->
+            <div class="space-y-2">
+              <label for="website" class="block text-sm font-medium text-[#5c3d2e]">Website</label>
+              @if (isEditing()) {
+                <input
+                  id="website"
+                  type="text"
+                  [(ngModel)]="formData().website"
+                  class="w-full px-3 py-2 border border-[#5c3d2e]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00] focus:border-transparent"
+                />
+              } @else {
+                <div class="flex items-center gap-2 p-2 bg-[#5c3d2e]/5 rounded-md text-sm">
+                  <svg class="h-4 w-4 text-[#8b7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+                  </svg>
+                  <span class="text-[#5c3d2e]">{{ formData().website }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <app-footer></app-footer>
+</div>

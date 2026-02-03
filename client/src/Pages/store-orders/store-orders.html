@@ -1,0 +1,257 @@
+<div class="min-h-screen bg-[#fffbeb]">
+  <app-nav></app-nav>
+
+  <main class="container mx-auto px-4 py-8">
+    <div class="space-y-6">
+      <!-- Header -->
+      <div>
+        <h1 class="text-3xl font-serif font-bold text-[#5c3d2e]">Orders</h1>
+        <p class="text-[#8b7355] mt-1">Manage and track customer orders</p>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <!-- Pending -->
+        <div 
+          (click)="setStatusFilter('pending')"
+          class="bg-white rounded-xl border border-[#5c3d2e]/20 shadow-sm cursor-pointer hover:border-yellow-500 transition-colors"
+        >
+          <div class="p-4 flex items-center gap-3">
+            <div class="p-2 rounded-lg bg-yellow-100">
+              <svg class="h-5 w-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-2xl font-bold text-[#5c3d2e]">{{ orderStats().pending }}</p>
+              <p class="text-xs text-[#8b7355]">Pending</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Processing -->
+        <div 
+          (click)="setStatusFilter('processing')"
+          class="bg-white rounded-xl border border-[#5c3d2e]/20 shadow-sm cursor-pointer hover:border-blue-500 transition-colors"
+        >
+          <div class="p-4 flex items-center gap-3">
+            <div class="p-2 rounded-lg bg-blue-100">
+              <svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-2xl font-bold text-[#5c3d2e]">{{ orderStats().processing }}</p>
+              <p class="text-xs text-[#8b7355]">Processing</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shipped -->
+        <div 
+          (click)="setStatusFilter('shipped')"
+          class="bg-white rounded-xl border border-[#5c3d2e]/20 shadow-sm cursor-pointer hover:border-purple-500 transition-colors"
+        >
+          <div class="p-4 flex items-center gap-3">
+            <div class="p-2 rounded-lg bg-purple-100">
+              <svg class="h-5 w-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-2xl font-bold text-[#5c3d2e]">{{ orderStats().shipped }}</p>
+              <p class="text-xs text-[#8b7355]">Shipped</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delivered -->
+        <div 
+          (click)="setStatusFilter('delivered')"
+          class="bg-white rounded-xl border border-[#5c3d2e]/20 shadow-sm cursor-pointer hover:border-green-500 transition-colors"
+        >
+          <div class="p-4 flex items-center gap-3">
+            <div class="p-2 rounded-lg bg-green-100">
+              <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-2xl font-bold text-[#5c3d2e]">{{ orderStats().delivered }}</p>
+              <p class="text-xs text-[#8b7355]">Delivered</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters & Table -->
+      <div class="bg-white rounded-xl border border-[#5c3d2e]/20 shadow-sm">
+        <div class="p-6 border-b border-[#5c3d2e]/10">
+          <div class="flex flex-col sm:flex-row gap-4">
+            <div class="relative flex-1">
+              <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#8b7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+              <input
+                type="text"
+                [(ngModel)]="searchQuery"
+                placeholder="Search by order ID or customer..."
+                class="w-full pl-10 pr-3 py-2 border border-[#5c3d2e]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00] focus:border-transparent"
+              />
+            </div>
+            <select 
+              [(ngModel)]="statusFilter"
+              class="w-full sm:w-48 px-3 py-2 border border-[#5c3d2e]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00] focus:border-transparent bg-white text-[#5c3d2e]"
+            >
+              <option value="all">All Orders</option>
+              <option value="pending">Pending</option>
+              <option value="processing">Processing</option>
+              <option value="shipped">Shipped</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="p-6">
+          <div class="rounded-md border border-[#5c3d2e]/10 overflow-hidden">
+            <table class="w-full">
+              <thead>
+                <tr class="border-b border-[#5c3d2e]/10 bg-[#5c3d2e]/5">
+                  <th class="text-left py-3 px-4 text-sm font-semibold text-[#5c3d2e]">Order ID</th>
+                  <th class="text-left py-3 px-4 text-sm font-semibold text-[#5c3d2e]">Customer</th>
+                  <th class="text-left py-3 px-4 text-sm font-semibold text-[#5c3d2e] hidden md:table-cell">Date</th>
+                  <th class="text-left py-3 px-4 text-sm font-semibold text-[#5c3d2e] hidden sm:table-cell">Items</th>
+                  <th class="text-left py-3 px-4 text-sm font-semibold text-[#5c3d2e]">Total</th>
+                  <th class="text-left py-3 px-4 text-sm font-semibold text-[#5c3d2e]">Status</th>
+                  <th class="text-right py-3 px-4 text-sm font-semibold text-[#5c3d2e]">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @if (filteredOrders().length === 0) {
+                  <tr>
+                    <td colspan="7" class="text-center py-8 text-[#8b7355]">
+                      No orders found
+                    </td>
+                  </tr>
+                } @else {
+                  @for (order of filteredOrders(); track order.id) {
+                    <tr class="border-b border-[#5c3d2e]/10 hover:bg-[#5c3d2e]/5 transition-colors">
+                      <td class="py-4 px-4 font-medium text-[#5c3d2e]">{{ order.id }}</td>
+                      <td class="py-4 px-4">
+                        <div>
+                          <p class="font-medium text-[#5c3d2e]">{{ order.customer }}</p>
+                          <p class="text-xs text-[#8b7355]">{{ order.email }}</p>
+                        </div>
+                      </td>
+                      <td class="py-4 px-4 text-[#5c3d2e] hidden md:table-cell">{{ order.date }}</td>
+                      <td class="py-4 px-4 text-[#5c3d2e] hidden sm:table-cell">{{ order.items.length }} item(s)</td>
+                      <td class="py-4 px-4 font-medium text-[#5c3d2e]">${{ order.total.toFixed(2) }}</td>
+                      <td class="py-4 px-4">
+                        <span 
+                          class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full"
+                          [class]="statusConfig[order.status].color"
+                        >
+                          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="statusConfig[order.status].icon"/>
+                          </svg>
+                          {{ statusConfig[order.status].label }}
+                        </span>
+                      </td>
+                      <td class="py-4 px-4 text-right">
+                        <button
+                          (click)="viewOrder(order)"
+                          class="px-3 py-1 hover:bg-[#5c3d2e]/10 rounded-lg transition-colors cursor-pointer inline-flex items-center gap-1 text-[#5c3d2e]"
+                        >
+                          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                  }
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Detail Modal -->
+    @if (selectedOrder()) {
+      <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" (click)="closeModal()">
+        <div class="bg-white rounded-xl max-w-lg w-full shadow-xl" (click)="$event.stopPropagation()">
+          <div class="p-6 border-b border-[#5c3d2e]/10">
+            <h2 class="text-xl font-serif font-bold text-[#5c3d2e]">Order Details</h2>
+            <p class="text-sm text-[#8b7355]">{{ selectedOrder()!.id }} • {{ selectedOrder()!.date }}</p>
+          </div>
+          
+          <div class="p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-[#8b7355]">Status</span>
+              <span 
+                class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full"
+                [class]="statusConfig[selectedOrder()!.status].color"
+              >
+                {{ statusConfig[selectedOrder()!.status].label }}
+              </span>
+            </div>
+            
+            <div class="border-t border-[#5c3d2e]/10 pt-4">
+              <h4 class="font-medium mb-2 text-[#5c3d2e]">Customer</h4>
+              <p class="text-sm text-[#5c3d2e]">{{ selectedOrder()!.customer }}</p>
+              <p class="text-sm text-[#8b7355]">{{ selectedOrder()!.email }}</p>
+              <p class="text-sm text-[#8b7355] mt-2">{{ selectedOrder()!.address }}</p>
+            </div>
+
+            <div class="border-t border-[#5c3d2e]/10 pt-4">
+              <h4 class="font-medium mb-2 text-[#5c3d2e]">Items</h4>
+              <div class="space-y-2">
+                @for (item of selectedOrder()!.items; track $index) {
+                  <div class="flex justify-between text-sm">
+                    <span class="text-[#5c3d2e]">{{ item.title }} × {{ item.quantity }}</span>
+                    <span class="text-[#5c3d2e]">${{ (item.price * item.quantity).toFixed(2) }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="border-t border-[#5c3d2e]/10 pt-4 flex justify-between font-medium">
+              <span class="text-[#5c3d2e]">Total</span>
+              <span class="text-[#ff8c00]">${{ selectedOrder()!.total.toFixed(2) }}</span>
+            </div>
+
+            @if (selectedOrder()!.status === 'pending') {
+              <div class="flex gap-2 pt-2">
+                <button 
+                  (click)="processOrder()"
+                  class="flex-1 px-4 py-2 bg-[#ff8c00] text-white rounded-lg hover:bg-[#e67e00] transition-colors cursor-pointer"
+                >
+                  Process Order
+                </button>
+                <button 
+                  (click)="cancelOrder()"
+                  class="flex-1 px-4 py-2 border border-[#5c3d2e]/20 text-[#5c3d2e] rounded-lg hover:bg-[#5c3d2e]/5 transition-colors cursor-pointer"
+                >
+                  Cancel Order
+                </button>
+              </div>
+            }
+            @if (selectedOrder()!.status === 'processing') {
+              <button 
+                (click)="markAsShipped()"
+                class="w-full px-4 py-2 bg-[#ff8c00] text-white rounded-lg hover:bg-[#e67e00] transition-colors cursor-pointer"
+              >
+                Mark as Shipped
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  </main>
+
+  <app-footer></app-footer>
+</div>
