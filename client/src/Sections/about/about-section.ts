@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
   templateUrl: './about-section.html',
   styleUrls: ['./about-section.css'],
 })
-export class AboutSectionComponent {
+export class AboutSection {
 }

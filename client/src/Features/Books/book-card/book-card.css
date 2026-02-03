@@ -1,0 +1,49 @@
+/* Line clamp utility for title truncation */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Optional: Add your CSS variables if you want to reference them elsewhere */
+:root {
+  --accent: #ff8c00;
+  --accent-dark: #ffb86b;
+  --star-filled: #ff8c00;
+  --star-empty: #ffc680;
+  --store-color: #904d1d;
+  --price-color: #d2691e;
+}
+
+/* Spacing between rating row and price */
+.book-rating {
+  margin-bottom: 12px;
+}
+
+/* Fixed card height and body rules to prevent stretching */
+.book-card {
+  width: 320px;
+  height: 480px;
+  display: flex;
+  flex-direction: column;
+}
+
+.book-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.book-title { /* ensure clamp applies */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.book-author {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

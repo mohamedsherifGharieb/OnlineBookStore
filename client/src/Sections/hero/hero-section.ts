@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   Component,
   Input,
@@ -11,11 +10,11 @@ import {
 @Component({
   selector: 'app-hero-section',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './hero-section.html',
   styleUrls: ['./hero-section.css'],
 })
-export class HeroSectionComponent {
+export class HeroSection {
   private _heroImage = signal<string | null>(null);
   private _subheadline = signal<string>(
     'Discover, buy, and read thousands of books from independent bookstores around the world'

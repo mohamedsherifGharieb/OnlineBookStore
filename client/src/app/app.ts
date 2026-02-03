@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { AccountService } from '../Core/services/account-service';
 import { Nav } from '../Layout/nav/nav';
-import { HeroSectionComponent } from '../Sections/hero/hero-section';
-import { AboutSectionComponent } from '../Sections/about/about-section';
+import { HeroSection } from '../Sections/hero/hero-section';
+import { AboutSection } from '../Sections/about/about-section';
+import { BookList } from '../Features/Books/book-list/book-list';
 
 @Component({
   selector: 'app-root',
-  imports: [Nav,HeroSectionComponent,AboutSectionComponent],
+  imports: [Nav,HeroSection,AboutSection,BookList],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
