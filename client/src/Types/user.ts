@@ -5,7 +5,7 @@ export type User = {
     displayName: string;
     token: string;
     email: string;
-    image?: string; // Match backend: "image" not "imageUrl"
+    image?: string; 
 }
 
 export type LoginCreds = {
@@ -17,7 +17,7 @@ export type RegisterCreds = {
     email: string;
     password: string;
     displayName: string;
-    role: UserRole; // Add role for buyer vs store owner
+    role: UserRole; 
 }
 
 export enum UserRole {

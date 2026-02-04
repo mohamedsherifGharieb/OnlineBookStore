@@ -28,7 +28,7 @@
 
     <!-- Form -->
     <div class="p-6">
-      <form (ngSubmit)="onSubmit()" class="space-y-4">
+      <form #RegisterForm="ngForm" (ngSubmit)="register()" class="space-y-4">
         <!-- Name Field -->
         <div class="space-y-2">
           <label for="name" class="block text-sm font-medium text-[#5c3d2e]">Display Name</label>
@@ -36,7 +36,7 @@
             id="name"
             type="text"
             placeholder="Your name"
-            [(ngModel)]="formData.name"
+            [(ngModel)]="creds.name"
             name="name"
             required
             class="w-full px-4 py-3 rounded-lg border border-[#5c3d2e]/30 bg-white focus:outline-none focus:border-[#5c3d2e] focus:ring-2 focus:ring-[#5c3d2e]/20 transition-colors"
@@ -50,7 +50,7 @@
             id="email"
             type="email"
             placeholder="your@email.com"
-            [(ngModel)]="formData.email"
+            [(ngModel)]="creds.email"
             name="email"
             required
             class="w-full px-4 py-3 rounded-lg border border-[#5c3d2e]/30 bg-white focus:outline-none focus:border-[#5c3d2e] focus:ring-2 focus:ring-[#5c3d2e]/20 transition-colors"
@@ -65,7 +65,7 @@
               id="password"
               [type]="showPassword() ? 'text' : 'password'"
               placeholder="••••••••"
-              [(ngModel)]="formData.password"
+              [(ngModel)]="creds.password"
               name="password"
               required
               class="w-full px-4 py-3 pr-12 rounded-lg border border-[#5c3d2e]/30 bg-white focus:outline-none focus:border-[#5c3d2e] focus:ring-2 focus:ring-[#5c3d2e]/20 transition-colors"
@@ -87,23 +87,7 @@
               }
             </button>
           </div>
-
-          <!-- Password Strength -->
-          @if (formData.password) {
-            <div class="space-y-1">
-              <div class="flex gap-1">
-                @for (level of [1, 2, 3, 4]; track level) {
-                  <div
-                    class="h-1 flex-1 rounded-full transition-colors"
-                    [class]="isStrengthLevel(level) ? passwordStrength().color : 'bg-gray-200'"
-                  ></div>
-                }
-              </div>
-              <p class="text-xs text-[#8b7355]">{{ passwordStrength().label }}</p>
-            </div>
-          }
         </div>
-
         <!-- Confirm Password -->
         <div class="space-y-2">
           <label for="confirmPassword" class="block text-sm font-medium text-[#5c3d2e]">Confirm Password</label>
@@ -112,7 +96,7 @@
               id="confirmPassword"
               [type]="showConfirmPassword() ? 'text' : 'password'"
               placeholder="••••••••"
-              [(ngModel)]="formData.confirmPassword"
+              [(ngModel)]="creds.confirmPassword"
               name="confirmPassword"
               required
               class="w-full px-4 py-3 pr-12 rounded-lg border border-[#5c3d2e]/30 bg-white focus:outline-none focus:border-[#5c3d2e] focus:ring-2 focus:ring-[#5c3d2e]/20 transition-colors"
@@ -145,23 +129,23 @@
               type="button"
               (click)="setRole('buyer')"
               class="relative flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all cursor-pointer"
-              [class]="role() === 'buyer' ? 'border-[#ff8c00] bg-[#ff8c00]/10' : 'border-[#5c3d2e]/30 bg-white hover:border-[#5c3d2e]/50'"
+              [class]="role() === 'buyer' ? 'border-library-orange-light bg-library-orange-light/10' : 'border-[#5c3d2e]/30 bg-white hover:border-[#5c3d2e]/50'"
             >
               @if (role() === 'buyer') {
-                <svg class="absolute top-2 right-2 h-4 w-4 text-[#ff8c00]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="absolute top-2 right-2 h-4 w-4 text-library-orange-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                 </svg>
               }
               <svg 
                 class="h-6 w-6" 
-                [class]="role() === 'buyer' ? 'text-[#ff8c00]' : 'text-[#5c3d2e]'"
+                [class]="role() === 'buyer' ? 'text-library-orange-light' : 'text-[#5c3d2e]'"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24"
               >
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
               </svg>
               <span 
                 class="text-sm font-medium"
-                [class]="role() === 'buyer' ? 'text-[#ff8c00]' : 'text-[#5c3d2e]'"
+                [class]="role() === 'buyer' ? 'text-library-orange-light' : 'text-[#5c3d2e]'"
               >
                 Buyer
               </span>
@@ -172,50 +156,33 @@
               type="button"
               (click)="setRole('store')"
               class="relative flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all cursor-pointer"
-              [class]="role() === 'store' ? 'border-[#ff8c00] bg-[#ff8c00]/10' : 'border-[#5c3d2e]/30 bg-white hover:border-[#5c3d2e]/50'"
+              [class]="role() === 'store' ? 'border-library-orange-light bg-library-orange-light/10' : 'border-[#5c3d2e]/30 bg-white hover:border-[#5c3d2e]/50'"
             >
               @if (role() === 'store') {
-                <svg class="absolute top-2 right-2 h-4 w-4 text-[#ff8c00]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="absolute top-2 right-2 h-4 w-4 text-library-orange-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                 </svg>
               }
               <svg 
                 class="h-6 w-6"
-                [class]="role() === 'store' ? 'text-[#ff8c00]' : 'text-[#5c3d2e]'"
+                [class]="role() === 'store' ? 'text-library-orange-light' : 'text-[#5c3d2e]'"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24"
               >
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
               </svg>
               <span 
                 class="text-sm font-medium"
-                [class]="role() === 'store' ? 'text-[#ff8c00]' : 'text-[#5c3d2e]'"
+                [class]="role() === 'store' ? 'text-library-orange-light' : 'text-[#5c3d2e]'"
               >
                 Store Owner
               </span>
             </button>
           </div>
         </div>
-
-        <!-- Terms -->
-        <div class="flex items-start gap-2">
-          <input
-            type="checkbox"
-            id="terms"
-            [(ngModel)]="formData.agreeTerms"
-            name="agreeTerms"
-            required
-            class="h-4 w-4 mt-0.5 rounded border-[#5c3d2e]/30 text-[#ff8c00] focus:ring-[#ff8c00] cursor-pointer"
-          />
-          <label for="terms" class="text-sm text-[#8b7355] cursor-pointer">
-            I agree to the
-            <a href="#" class="text-[#ff8c00] hover:underline">Terms & Conditions</a>
-          </label>
-        </div>
-
         <!-- Submit Button -->
         <button
           type="submit"
-          class="w-full py-3 cursor-pointer px-4 rounded-lg bg-[#ff8c00] text-white font-semibold hover:bg-[#e67e00] transition-colors focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/50"
+          class="w-full py-3 cursor-pointer px-4 rounded-lg bg-library-orange-light text-white font-semibold hover:bg-[#e67e00] transition-colors focus:outline-none focus:ring-2 focus:ring-library-orange-light/50"
         >
           Create Account
         </button>
@@ -233,7 +200,7 @@
         <!-- Switch to Login -->
         <p class="text-center text-sm text-[#8b7355]">
           Already have an account?
-          <a routerLink="/login" class="text-[#ff8c00] hover:underline font-medium">Sign In</a>
+          <a routerLink="/login" class="text-library-orange-light hover:underline font-medium">Sign In</a>
         </p>
       </form>
     </div>

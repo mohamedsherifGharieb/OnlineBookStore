@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { LucideAngularModule, BookOpen, ShoppingCart, Menu, X, Search } from 'lucide-angular';
 
 interface NavLink {
@@ -15,7 +15,9 @@ interface NavLink {
   styleUrl: './nav.css',
 })
 export class Nav {
-  // Icons
+
+  private router = inject(Router);
+
   readonly BookOpen = BookOpen;
   readonly ShoppingCart = ShoppingCart;
   readonly Menu = Menu;
@@ -43,13 +45,11 @@ export class Nav {
     this.isMenuOpen = false;
   }
 
-  onSignIn(): void {
-    // TODO: Implement sign in modal
-    console.log('Sign In clicked');
+  onSignUp(): void {
+    this.router.navigate(['/register']);
   }
 
-  onSignUp(): void {
-    // TODO: Implement sign up modal
-    console.log('Sign Up clicked');
+  onLogIn(): void {
+    this.router.navigate(['/login']);
   }
 }

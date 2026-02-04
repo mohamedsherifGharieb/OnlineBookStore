@@ -1,37 +1,52 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs';
+import { User } from '../../Types/user';
+import { AccountService } from '../../Core/services/account-service';
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [ FormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrls: ['./login.css']
 })
 export class LoginPage {
-  showPassword = false;
-  formData = {
-    email: '',
-    password: '',
-    rememberMe: false,
-  };
+  
+  private router = inject(Router);
 
-  constructor(private router: Router) {}
+   protected accountService = inject(AccountService);
+   protected creds: any = {}
+
+
+  showPassword = false;
 
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
-
-  onSubmit(event: Event) {
-    event.preventDefault();
-    console.log('Login submitted:', this.formData);
-    // Mock login - navigate to home
+  goBack() {
     this.router.navigate(['/']);
   }
 
-  goBack() {
-    this.router.navigate(['/']);
+ login() {
+  if(!this.creds.email || !this.creds.password){
+    alert("Please enter email and password"); // Change it with Toast for better Ui
+    return;
+  }
+    this.accountService.login(this.creds).subscribe({
+      next: result => {
+        console.log(result);
+        this.creds = {};
+      },
+      error: error => console.log(error)
+    }
+    )
+   console.log(this.creds); 
+   this.router.navigate(['/']);
+  }
+  logout() {
+    this.accountService.logout();
   }
 }

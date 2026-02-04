@@ -32,7 +32,7 @@
 
     <!-- Card Content -->
     <div class="p-6 pt-4">
-      <form (submit)="onSubmit($event)" class="space-y-4">
+      <form #loginForm="ngForm" (ngSubmit)="login()"  class="space-y-4">
         
         <!-- Email Field -->
         <div class="space-y-2">
@@ -40,7 +40,7 @@
           <input
             id="email"
             type="email"
-            [(ngModel)]="formData.email"
+            [(ngModel)]="creds.email"
             name="email"
             placeholder="your@email.com"
             class="w-full px-3 py-2 rounded-md border border-[#5c3d2e]/30 bg-white focus:border-[#5c3d2e] focus:outline-none focus:ring-1 focus:ring-[#5c3d2e]/50 transition-colors"
@@ -52,15 +52,13 @@
         <div class="space-y-2">
           <div class="flex justify-between items-center">
             <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-            <a href="#" class="text-xs text-[#ff8c00] hover:text-[#ffb86b] transition-colors">
-              Forgot password?
-            </a>
+            
           </div>
           <div class="relative">
             <input
               id="password"
               [type]="showPassword ? 'text' : 'password'"
-              [(ngModel)]="formData.password"
+              [(ngModel)]="creds.password"
               name="password"
               placeholder="••••••••"
               class="w-full px-3 py-2 pr-10 rounded-md border border-[#5c3d2e]/30 bg-white focus:border-[#5c3d2e] focus:outline-none focus:ring-1 focus:ring-[#5c3d2e]/50 transition-colors"
@@ -90,25 +88,11 @@
           </div>
         </div>
 
-        <!-- Remember Me -->
-        <div class="flex items-center gap-2">
-          <input
-            type="checkbox"
-            id="rememberMe"
-            [(ngModel)]="formData.rememberMe"
-            name="rememberMe"
-            class="h-4 w-4 rounded border-[#5c3d2e]/30 text-[#ff8c00] focus:ring-[#ff8c00] cursor-pointer"
-          />
-          <label for="rememberMe" class="text-sm text-gray-500 cursor-pointer">
-            Remember me
-          </label>
-        </div>
-
         <!-- Submit Button -->
         <button 
           type="submit" 
-          class="w-full py-3 px-4 bg-[#ff8c00] hover:bg-[#ffb86b] text-white font-semibold rounded-lg transition-colors cursor-pointer">
-          Sign In
+          class="w-full py-3 px-4 bg-library-orange-light hover:bg-[#ffb86b] text-white font-semibold rounded-lg transition-colors cursor-pointer">
+          Log In
         </button>
 
         <!-- Divider -->
@@ -124,7 +108,7 @@
         <!-- Switch to Register -->
         <p class="text-center text-sm text-gray-500">
           Don't have an account? 
-          <a routerLink="/register" class="text-[#ff8c00] hover:underline font-medium">
+          <a routerLink="/register" class="text-library-orange-light hover:underline font-medium">
             Sign Up
           </a>
         </p>

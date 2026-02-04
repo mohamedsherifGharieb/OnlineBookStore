@@ -5,13 +5,12 @@ using BookStoreApi.DTOS;
 using BookStoreApi.Entities;
 using BookStoreApi.Extensions;
 using BookStoreApi.Interfaces;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreApi.Controllers
 {
-    public class AccountController(UserManager<AppUser> userManager, ITokenService _tokenService) : BaseApiController
+    public class AccountController(AppDbContext _context, ITokenService _tokenService) : BaseApiController
     {
         // =====================================
         // REGISTER
@@ -56,9 +55,9 @@ namespace BookStoreApi.Controllers
             {
                 return BadRequest("Invalid user role");
             }
-            var result = await userManager.CreateAsync(user);
-            if (!result.Succeeded)
-                return BadRequest("Problem registering user");
+            
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
 
             return  user.ToUserDto(_tokenService);
         }
@@ -69,7 +68,10 @@ namespace BookStoreApi.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
-           var user = await userManager.FindByEmailAsync(loginDto.Email.Trim().ToLower());
+           var user = await _context.Users
+                .Include(u => u.BuyerProfile)
+                .Include(u => u.StoreOwnerProfile)
+                .FirstOrDefaultAsync(u => u.Email == loginDto.Email.Trim().ToLower());
 
             if (user == null)
                 return Unauthorized("Invalid email");
@@ -91,7 +93,7 @@ namespace BookStoreApi.Controllers
         // =====================================
         private async Task<bool> UserExists(string email)
         {
-            return await userManager.Users
+            return await _context.Users
                 .AnyAsync(u => u.Email == email.Trim().ToLower());
         }
     }
