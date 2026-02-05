@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { LucideAngularModule, BookOpen, ShoppingCart, Menu, X, Search } from 'lucide-angular';
+import { AccountService } from '../../Core/services/account-service';
 
 interface NavLink {
   label: string;
@@ -17,6 +18,7 @@ interface NavLink {
 export class Nav {
 
   private router = inject(Router);
+  accountService = inject(AccountService);
 
   readonly BookOpen = BookOpen;
   readonly ShoppingCart = ShoppingCart;
@@ -51,5 +53,10 @@ export class Nav {
 
   onLogIn(): void {
     this.router.navigate(['/login']);
+  }
+
+  logout(): void {
+    this.accountService.logout();
+    this.router.navigate(['/']);
   }
 }
