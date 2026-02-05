@@ -1,5 +1,5 @@
-import { Component, signal, computed, inject, output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, signal, inject, output } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AccountService } from '../../Core/services/account-service';
 import { RegisterCreds } from '../../Types/user';
@@ -7,21 +7,36 @@ import { RegisterCreds } from '../../Types/user';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './register.html',
   styleUrls: ['./register.css']
 })
 export class RegisterPage {
   
   private accountService = inject(AccountService);
+  private fb = inject(FormBuilder);
+  private router = inject(Router);
+  
   cancelRegister = output<boolean>(); 
-  protected creds ={} as RegisterCreds;
+  protected registerForm: FormGroup;
+  protected validationErrors = signal<string[]>([]);
 
   showPassword = signal(false);
   showConfirmPassword = signal(false);
-  role = signal<'buyer' | 'store'>('buyer');
 
-  constructor(private router: Router) {}
+  constructor() {
+    this.registerForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      displayName: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(4)]],
+      confirmPassword: ['', [Validators.required, this.matchValues('password')]],
+      role: [1, Validators.required]
+    });
+
+    this.registerForm.controls['password'].valueChanges.subscribe(() => {
+      this.registerForm.controls['confirmPassword'].updateValueAndValidity();
+    });
+  }
 
   togglePassword(): void {
     this.showPassword.update(v => !v);
@@ -31,23 +46,46 @@ export class RegisterPage {
     this.showConfirmPassword.update(v => !v);
   }
 
-  setRole(newRole: 'buyer' | 'store'): void {
-    this.role.set(newRole);
+  register() {
+    if (this.registerForm.valid) {
+      const creds: RegisterCreds = {
+        email: this.registerForm.value.email,
+        password: this.registerForm.value.password,
+        displayName: this.registerForm.value.displayName,
+        role: this.registerForm.value.role
+      };
+      
+      this.accountService.register(creds).subscribe({
+        next: () => {
+          this.router.navigateByUrl('/');
+        },
+        error: error => {
+          this.validationErrors.set(error);
+        }
+      });
+    }
   }
-  register()
-{
-  console.log(this.creds);
 
-  this.accountService.register(this.creds).subscribe({
-    next: reponse => {
-      this.cancel();
-    },
-    error: error => console.log(error)
-  });
-}
-cancel()
-{
-  console.log("cancelled!");
-  this.cancelRegister.emit(false);
-}
+  matchValues(matchTo: string): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const parent = control.parent;
+      if (!parent) return null;
+      const matchValue = parent.get(matchTo)?.value;
+      return control.value === matchValue ? null : { passwordMismatch: true }
+    }
+  }
+
+  hasError(controlName: string): boolean {
+    const control = this.registerForm.get(controlName);
+    return !!(control && control.invalid && (control.dirty || control.touched));
+  }
+
+  passwordsMatch(): boolean {
+    const confirmPassword = this.registerForm.get('confirmPassword');
+    return !!(confirmPassword?.valid && confirmPassword?.value);
+  }
+
+  cancel() {
+    this.cancelRegister.emit(false);
+  }
 }

@@ -28,7 +28,7 @@
 
     <!-- Form -->
     <div class="p-6">
-      <form #RegisterForm="ngForm" (ngSubmit)="register()" class="space-y-4">
+      <form [formGroup]="registerForm" (ngSubmit)="register()" class="space-y-4">
         <!-- Name Field -->
         <div class="space-y-2">
           <label for="name" class="block text-sm font-medium text-[#5c3d2e]">Display Name</label>
@@ -36,11 +36,14 @@
             id="name"
             type="text"
             placeholder="Your name"
-            [(ngModel)]="creds.name"
-            name="name"
-            required
+            formControlName="displayName"
+            [style.border-color]="hasError('displayName') ? '#dc2626' : ''"
+            [style.border-width]="hasError('displayName') ? '2px' : ''"
             class="w-full px-4 py-3 rounded-lg border border-[#5c3d2e]/30 bg-white focus:outline-none focus:border-[#5c3d2e] focus:ring-2 focus:ring-[#5c3d2e]/20 transition-colors"
           />
+          @if(hasError('displayName')) {
+            <span class="text-red-500 text-sm">Display name is required</span>
+          }
         </div>
 
         <!-- Email Field -->
@@ -50,11 +53,14 @@
             id="email"
             type="email"
             placeholder="your@email.com"
-            [(ngModel)]="creds.email"
-            name="email"
-            required
+            formControlName="email"
+            [style.border-color]="hasError('email') ? '#dc2626' : ''"
+            [style.border-width]="hasError('email') ? '2px' : ''"
             class="w-full px-4 py-3 rounded-lg border border-[#5c3d2e]/30 bg-white focus:outline-none focus:border-[#5c3d2e] focus:ring-2 focus:ring-[#5c3d2e]/20 transition-colors"
           />
+          @if(hasError('email')) {
+            <span class="text-red-500 text-sm">Valid email is required</span>
+          }
         </div>
 
         <!-- Password Field -->
@@ -65,9 +71,9 @@
               id="password"
               [type]="showPassword() ? 'text' : 'password'"
               placeholder="••••••••"
-              [(ngModel)]="creds.password"
-              name="password"
-              required
+              formControlName="password"
+              [style.border-color]="hasError('password') ? '#dc2626' : ''"
+              [style.border-width]="hasError('password') ? '2px' : ''"
               class="w-full px-4 py-3 pr-12 rounded-lg border border-[#5c3d2e]/30 bg-white focus:outline-none focus:border-[#5c3d2e] focus:ring-2 focus:ring-[#5c3d2e]/20 transition-colors"
             />
             <button
@@ -87,6 +93,9 @@
               }
             </button>
           </div>
+          @if(hasError('password')) {
+            <span class="text-red-500 text-sm">Password must be at least 4 characters</span>
+          }
         </div>
         <!-- Confirm Password -->
         <div class="space-y-2">
@@ -96,9 +105,9 @@
               id="confirmPassword"
               [type]="showConfirmPassword() ? 'text' : 'password'"
               placeholder="••••••••"
-              [(ngModel)]="creds.confirmPassword"
-              name="confirmPassword"
-              required
+              formControlName="confirmPassword"
+              [style.border-color]="hasError('confirmPassword') ? '#dc2626' : passwordsMatch() ? '#059669' : ''"
+              [style.border-width]="(hasError('confirmPassword') || passwordsMatch()) ? '2px' : ''"
               class="w-full px-4 py-3 pr-12 rounded-lg border border-[#5c3d2e]/30 bg-white focus:outline-none focus:border-[#5c3d2e] focus:ring-2 focus:ring-[#5c3d2e]/20 transition-colors"
             />
             <button
@@ -118,6 +127,12 @@
               }
             </button>
           </div>
+          @if(hasError('confirmPassword')) {
+            <span class="text-red-500 text-sm">Passwords do not match</span>
+          }
+          @if(passwordsMatch()) {
+            <span class="text-green-600 text-sm">✓ Passwords match</span>
+          }
         </div>
 
         <!-- Role Selection -->
@@ -127,25 +142,25 @@
             <!-- Buyer Option -->
             <button
               type="button"
-              (click)="setRole('buyer')"
+              (click)="registerForm.patchValue({role: 1})"
               class="relative flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all cursor-pointer"
-              [class]="role() === 'buyer' ? 'border-library-orange-light bg-library-orange-light/10' : 'border-[#5c3d2e]/30 bg-white hover:border-[#5c3d2e]/50'"
+              [class]="registerForm.get('role')?.value === 1 ? 'border-library-orange-light bg-library-orange-light/10' : 'border-[#5c3d2e]/30 bg-white hover:border-[#5c3d2e]/50'"
             >
-              @if (role() === 'buyer') {
+              @if (registerForm.get('role')?.value === 1) {
                 <svg class="absolute top-2 right-2 h-4 w-4 text-library-orange-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                 </svg>
               }
               <svg 
                 class="h-6 w-6" 
-                [class]="role() === 'buyer' ? 'text-library-orange-light' : 'text-[#5c3d2e]'"
+                [class]="registerForm.get('role')?.value === 1 ? 'text-library-orange-light' : 'text-[#5c3d2e]'"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24"
               >
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
               </svg>
               <span 
                 class="text-sm font-medium"
-                [class]="role() === 'buyer' ? 'text-library-orange-light' : 'text-[#5c3d2e]'"
+                [class]="registerForm.get('role')?.value === 1 ? 'text-library-orange-light' : 'text-[#5c3d2e]'"
               >
                 Buyer
               </span>
@@ -154,25 +169,25 @@
             <!-- Store Owner Option -->
             <button
               type="button"
-              (click)="setRole('store')"
+              (click)="registerForm.patchValue({role: 2})"
               class="relative flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all cursor-pointer"
-              [class]="role() === 'store' ? 'border-library-orange-light bg-library-orange-light/10' : 'border-[#5c3d2e]/30 bg-white hover:border-[#5c3d2e]/50'"
+              [class]="registerForm.get('role')?.value === 2 ? 'border-library-orange-light bg-library-orange-light/10' : 'border-[#5c3d2e]/30 bg-white hover:border-[#5c3d2e]/50'"
             >
-              @if (role() === 'store') {
+              @if (registerForm.get('role')?.value === 2) {
                 <svg class="absolute top-2 right-2 h-4 w-4 text-library-orange-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                 </svg>
               }
               <svg 
                 class="h-6 w-6"
-                [class]="role() === 'store' ? 'text-library-orange-light' : 'text-[#5c3d2e]'"
+                [class]="registerForm.get('role')?.value === 2 ? 'text-library-orange-light' : 'text-[#5c3d2e]'"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24"
               >
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
               </svg>
               <span 
                 class="text-sm font-medium"
-                [class]="role() === 'store' ? 'text-library-orange-light' : 'text-[#5c3d2e]'"
+                [class]="registerForm.get('role')?.value === 2 ? 'text-library-orange-light' : 'text-[#5c3d2e]'"
               >
                 Store Owner
               </span>
@@ -182,7 +197,8 @@
         <!-- Submit Button -->
         <button
           type="submit"
-          class="w-full py-3 cursor-pointer px-4 rounded-lg bg-library-orange-light text-white font-semibold hover:bg-[#e67e00] transition-colors focus:outline-none focus:ring-2 focus:ring-library-orange-light/50"
+          [disabled]="!registerForm.valid"
+          class="w-full py-3 cursor-pointer px-4 rounded-lg bg-library-orange-light text-white font-semibold hover:bg-[#e67e00] transition-colors focus:outline-none focus:ring-2 focus:ring-library-orange-light/50 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Create Account
         </button>
