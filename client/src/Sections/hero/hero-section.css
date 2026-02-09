@@ -1,11 +1,14 @@
 /* minimal local tweaks; main visuals come from Tailwind + DaisyUI */
 img { object-fit: cover; width: 100%; height: 100%; }
 
+.hero-section {
+	contain: layout style paint;
+}
+
 /* background treatment: slight blur and gentle scale for soft focus */
 .hero-bg {
-	transform: scale(1.03);
-	filter: blur(4px) contrast(0.95) saturate(0.95);
-	-webkit-filter: blur(4px) contrast(0.95) saturate(0.95);
+	transform: scale(1.05) translateZ(0);
+	will-change: transform;
 }
 
 /* headline contrast boost for readability on warm overlay */
@@ -28,10 +31,12 @@ img { object-fit: cover; width: 100%; height: 100%; }
 	pointer-events: none;
 	mix-blend-mode: multiply;
 	background: linear-gradient(135deg,
-		#d07431 0%,    
-		#ea7a18 60%,  
-		#e78e2f 100%     
+		#a85a1b 0%,
+		#c26515 60%,
+		#b87425 100%
 	);
+	will-change: transform;
+	transform: translateZ(0);
 }
 
 /* primary CTA styles for hero (overrides DaisyUI where needed) */

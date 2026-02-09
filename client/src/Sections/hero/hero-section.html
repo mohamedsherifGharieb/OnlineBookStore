@@ -1,34 +1,33 @@
-<section class="hero-section relative min-h-[90vh] flex items-center overflow-hidden">
+<section id="hero" class="hero-section relative min-h-[90vh] flex items-center overflow-hidden">
   <!-- Background Image + Gradient -->
     <div class="absolute inset-0">
     <img src="/BackGround.jpg" alt="Cozy library background" class="w-full h-full object-cover hero-bg" />
     <div class="absolute inset-0 hero-overlay" aria-hidden="true"></div>
-    <div class="absolute inset-0 bg-black/10 backdrop-blur-sm" aria-hidden="true"></div>
   </div>
 
   <!-- Content -->
   <div class="container relative z-10 py-20 flex items-start pl-6 md:pl-12 lg:pl-20">
     <div class="max-w-2xl space-y-6 text-left">
       <!-- Badge -->
-      <div role="status" aria-label="catalog size" class="inline-flex items-center gap-2 px-4 py-2 badge-pill backdrop-blur-sm border border-white/40 animate-fade-in">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="h-7 w-7 badge-icon flex-shrink-0" stroke="#ff8c00" class="size-6">
+      <div role="status" aria-label="catalog size" class="inline-flex items-center gap-2 px-4 py-2 badge-pill border border-white/40 animate-fade-in">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="h-7 w-7 badge-icon shrink-0" stroke="#ff8c00" class="size-6">
         <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
         </svg>
         <span class="text-sm font-medium text-white">Over 10,000 books available</span>
       </div>
 
       <!-- Headline -->
-      <h1 class="text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-(--color-library-cream) leading-tight animate-fade-in whitespace-wrap">
+      <h1 class="text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-library-cream leading-tight animate-fade-in whitespace-wrap">
         Your Digital Library
       </h1>
 
       <!-- Subheadline -->
-      <p class="text-xl md:text-2xl text-(--color-library-cream)/90 font-medium animate-fade-in-delayed">
+      <p class="text-xl md:text-2xl text-library-cream/90 font-medium animate-fade-in-delayed">
         {{ subheadline() }}
       </p>
 
       <!-- Description -->
-      <p class="text-lg text-(--color-library-cream)/80 animate-fade-in-delayed">
+      <p class="text-lg text-library-cream/80 animate-fade-in-delayed">
         {{ description() }}
       </p>
 
@@ -48,30 +47,4 @@
     </div>
   </div>
 
-  <!-- Floating decorations: DaisyUI cards splattered across the hero -->
-  <div class="hidden lg:block">
-    <div class="absolute right-12 top-10 opacity-20 animate-float">
-      <div class="card w-20 h-28 bg-cream/30 rounded-lg rotate-12 shadow-xl" aria-hidden="true"></div>
-    </div>
-
-    <div class="absolute right-28 top-40 opacity-18 animate-float-delayed">
-      <div class="card w-24 h-32 bg-cream/30 rounded-lg -rotate-6 shadow-xl" aria-hidden="true"></div>
-    </div>
-
-    <div class="absolute right-6 bottom-32 opacity-20 animate-float-slow">
-      <div class="card w-16 h-24 bg-cream/30 rounded-lg rotate-3 shadow-xl" aria-hidden="true"></div>
-    </div>
-
-    <div class="absolute left-6 top-1/4 opacity-10 animate-float-slow">
-      <div class="card w-16 h-24 bg-cream/30 rounded-lg -rotate-3 shadow-xl" aria-hidden="true"></div>
-    </div>
-
-    <div class="absolute left-20 bottom-10 opacity-12 animate-float-delayed">
-      <div class="card w-20 h-28 bg-cream/30 rounded-lg rotate-6 shadow-xl" aria-hidden="true"></div>
-    </div>
-
-    <div class="absolute left-40 top-6 opacity-10 animate-float">
-      <div class="card w-24 h-32 bg-cream/30 rounded-lg -rotate-12 shadow-xl" aria-hidden="true"></div>
-    </div>
-  </div>
 </section>

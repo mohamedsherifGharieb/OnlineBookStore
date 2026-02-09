@@ -8,6 +8,23 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
-  <app-root></app-root>
+  <app-root>
+    <!-- Splash shown until Angular bootstraps -->
+    <div style="display:flex;align-items:center;justify-content:center;height:100vh;width:100%;background-color:#fff8dc;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:1.25rem;animation:splash-pulse 1.4s ease-in-out infinite;">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#5d4037" style="width:5rem;height:5rem;">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z"/>
+        </svg>
+        <h1 style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:#3e2723;margin:0;">BookStore</h1>
+        <div style="width:10rem;height:4px;border-radius:999px;background:rgba(93,64,55,0.2);overflow:hidden;">
+          <div style="height:100%;width:40%;border-radius:999px;background:linear-gradient(90deg,#8b4513,#d2691e,#ff8c00);animation:splash-slide 1.2s ease-in-out infinite;"></div>
+        </div>
+      </div>
+    </div>
+    <style>
+      @keyframes splash-pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.85}}
+      @keyframes splash-slide{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
+    </style>
+  </app-root>
 </body>
 </html>

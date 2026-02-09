@@ -9,14 +9,14 @@
       </a>
 
       <!-- Desktop Navigation -->
-      <nav class="hidden lg:flex items-center gap-6">
-        <a 
-          *ngFor="let link of navLinks"
-          [routerLink]="link.href"
-          class="text-sm font-medium text-library-brown/70 hover:text-library-orange transition-colors"
-        >
-          {{ link.label }}
-        </a>
+      <nav class="hidden lg:flex justify-between items-center gap-15">
+        @for (link of navLinks; track link.label) {
+          <a 
+            [routerLink]="link.href ?? null"
+            (click)="link.scrollTo && scrollToSection(link.scrollTo)"
+            class="text-sm font-semibold text-library-brown/70 hover:text-library-orange transition-colors cursor-pointer"
+          >{{ link.label }}</a>
+        }
       </nav>
 
       <!-- Search Bar (Desktop) -->
@@ -29,7 +29,7 @@
           <input
             type="search"
             placeholder="Search for books, authors, stores..."
-            class="w-full pl-10 pr-4 py-2 rounded-md border border-library-brown/30 bg-cream focus:outline-none focus:border-library-brown focus:ring-1 focus:ring-(--color-library-orange)"
+            class="w-full pl-10 pr-4 py-2 rounded-md border border-library-brown/30 bg-cream focus:outline-none focus:border-library-brown focus:ring-1 focus:ring-library-orange"
           />
         </div>
       </div>

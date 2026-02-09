@@ -1,4 +1,4 @@
-<section class="py-20" style="background-color: #5c3d2e;">
+<section id="how-it-works" class="py-20" style="background-color: #5c3d2e;">
   <div class="container mx-auto px-8">
     <!-- Section Header -->
     <div class="text-center mb-16">
@@ -12,7 +12,7 @@
 
     <!-- Steps -->
     <div class="grid md:grid-cols-4 gap-8 relative">
-      <!-- Connection Line - Desktop -->
+
       <div class="hidden md:block absolute top-12 left-[12%] right-[12%] h-0.5 bg-amber-100/30"></div>
 
       @for (step of steps; track step.number; let i = $index) {
@@ -53,7 +53,7 @@
             }
             
             <!-- Number Badge -->
-            <span class="absolute -top-1 -right-1 w-8 h-8 rounded-full bg-[#ff8c00] text-white text-sm font-bold flex items-center justify-center shadow-md">
+            <span class="absolute -top-1 -right-1 w-8 h-8 rounded-full bg-library-orange-light text-white text-sm font-bold flex items-center justify-center shadow-md">
               {{ step.number }}
             </span>
           </div>
@@ -64,7 +64,7 @@
           </h3>
 
           <!-- Description -->
-          <p class="text-sm text-white/70 max-w-[200px]">
+          <p class="text-sm text-white/70 max-w-50">
             {{ step.description }}
           </p>
 

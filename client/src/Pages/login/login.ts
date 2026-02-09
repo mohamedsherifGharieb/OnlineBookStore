@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
 import { User } from '../../Types/user';
 import { AccountService } from '../../Core/services/account-service';
+import { ToastService } from '../../Core/services/toast-service';
 
 @Component({
   selector: 'app-login-page',
@@ -18,6 +19,7 @@ export class LoginPage {
   private router = inject(Router);
 
    protected accountService = inject(AccountService);
+   private toastService = inject(ToastService);
    protected creds: any = {}
 
 
@@ -32,21 +34,22 @@ export class LoginPage {
 
  login() {
   if(!this.creds.email || !this.creds.password){
-    alert("Please enter email and password"); // Change it with Toast for better Ui
+    this.toastService.warn("Please enter email and password");
     return;
   }
     this.accountService.login(this.creds).subscribe({
-      next: result => {
-        console.log(result);
+      next: () => {
+        this.router.navigateByUrl('/');
+        this.toastService.success("Logged in successfully");
         this.creds = {};
       },
-      error: error => console.log(error)
-    }
-    )
-   console.log(this.creds); 
-   this.router.navigate(['/']);
+      error: error => {
+        this.toastService.error(error.error);
+      }
+    });
   }
   logout() {
     this.accountService.logout();
+    this.toastService.info("Logged out");
   }
 }

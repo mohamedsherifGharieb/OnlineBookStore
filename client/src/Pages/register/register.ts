@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validatio
 import { Router, RouterLink } from '@angular/router';
 import { AccountService } from '../../Core/services/account-service';
 import { RegisterCreds } from '../../Types/user';
+import { ToastService } from '../../Core/services/toast-service';
 
 @Component({
   selector: 'app-register',
@@ -16,6 +17,7 @@ export class RegisterPage {
   private accountService = inject(AccountService);
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  private toastService = inject(ToastService);
   
   cancelRegister = output<boolean>(); 
   protected registerForm: FormGroup;
@@ -57,9 +59,11 @@ export class RegisterPage {
       
       this.accountService.register(creds).subscribe({
         next: () => {
+          this.toastService.success("Registered successfully, you are now logged in");
           this.router.navigateByUrl('/');
         },
         error: error => {
+          this.toastService.error(error.error || 'Registration failed');
           this.validationErrors.set(error);
         }
       });
