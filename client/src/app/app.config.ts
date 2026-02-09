@@ -1,24 +1,32 @@
-import { APP_INITIALIZER, ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { ApplicationConfig, inject, provideAppInitializer, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { provideRouter, withViewTransitions } from '@angular/router';
 import { routes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { InitService } from '../Core/services/init-service';
 import { lastValueFrom } from 'rxjs';
-
-function initializeApp(initService: InitService) {
-  return () => lastValueFrom(initService.init());
-}
+import { errorInterceptor } from '../Core/interceptor/error-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes),
-    provideHttpClient(),
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeApp,
-      deps: [InitService],
-      multi: true
-    }
+    provideRouter(routes, withViewTransitions()),
+    provideHttpClient(withInterceptors([errorInterceptor])),
+    provideAppInitializer(async () => {
+      const initService = inject(InitService);
+
+      return new Promise<void>((resolve) => {
+        setTimeout(async () => {
+          try {
+            await lastValueFrom(initService.init());
+          } finally {
+            const splash = document.getElementById('initial-splash');
+            if (splash) {
+              splash.remove();
+            }
+            resolve();
+          }
+        }, 3000);
+      });
+    }),
   ]
 };

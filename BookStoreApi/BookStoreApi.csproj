@@ -20,8 +20,10 @@
     <Folder Include="Data\" />
     <Folder Include="DTOS\" />
     <Folder Include="Entities\" />
+    <Folder Include="Error\" />
     <Folder Include="Extensions\" />
     <Folder Include="Interfaces\" />
+    <Folder Include="Middleware\" />
   </ItemGroup>
 
 </Project>
