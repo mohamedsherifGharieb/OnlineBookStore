@@ -1,18 +1,10 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Nav } from '../../Layout/nav/nav';
 import { Footer } from '../../Sections/footer/footer';
-
-interface Order {
-  id: string;
-  date: string;
-  items: string[];
-  store: string;
-  total: string;
-  status: 'delivered' | 'shipped' | 'processing' | 'pending';
-}
-
+import { OrderService } from '../../Core/services/order-service';
+import { Order } from '../../Types/order';
 @Component({
   selector: 'app-orders',
   standalone: true,
@@ -21,55 +13,41 @@ interface Order {
   styleUrls: ['./orders.css']
 })
 export class OrdersPage {
-  orders = signal<Order[]>([
-    {
-      id: 'ORD-2026-001',
-      date: '2026-01-15',
-      items: ['The Midnight Library', 'Atomic Habits'],
-      store: 'Cozy Corner Books',
-      total: '$35.98',
-      status: 'delivered',
-    },
-    {
-      id: 'ORD-2026-002',
-      date: '2026-01-10',
-      items: ['Project Hail Mary'],
-      store: 'Sci-Fi Sanctuary',
-      total: '$19.99',
-      status: 'shipped',
-    },
-    {
-      id: 'ORD-2026-003',
-      date: '2026-01-05',
-      items: ['Educated', 'The Song of Achilles'],
-      store: 'Classic Tales',
-      total: '$31.98',
-      status: 'processing',
-    },
-    {
-      id: 'ORD-2025-089',
-      date: '2025-12-28',
-      items: ['Where the Crawdads Sing'],
-      store: "Nature's Nook",
-      total: '$15.99',
-      status: 'delivered',
-    },
-  ]);
+  orders = signal<Order[]>([]);
+  loading = signal<boolean>(true);
+  error = signal<string | null>(null);
+  private ordersService = inject(OrderService);
 
-  constructor(private router: Router) {}
+
+  constructor(private router: Router) {
+    this.fetchOrders();
+  }
+
+  fetchOrders() {
+    this.loading.set(true);
+    this.error.set(null);
+    this.ordersService.getOrders().subscribe({
+      next: (orders) => {
+        this.orders.set(orders);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.error.set('Failed to load orders.');
+        this.loading.set(false);
+      }
+    });
+  }
+
 
   totalOrders = computed(() => this.orders().length);
-  
-  deliveredCount = computed(() => 
-    this.orders().filter(o => o.status === 'delivered').length
-  );
-  
-  inProgressCount = computed(() => 
-    this.orders().filter(o => o.status === 'shipped' || o.status === 'processing').length
-  );
+  deliveredCount = computed(() => this.orders().filter(o => o.status?.toLowerCase() === 'delivered').length);
+  inProgressCount = computed(() => this.orders().filter(o => o.status?.toLowerCase() === 'shipped' || o.status?.toLowerCase() === 'processing').length);
+  cancelledCount = computed(() => this.orders().filter(o => o.status?.toLowerCase() === 'cancelled').length);
+  completedCount = computed(() => this.orders().filter(o => o.status?.toLowerCase() === 'delivered').length);
+
 
   getStatusClasses(status: string): string {
-    switch (status) {
+    switch (status?.toLowerCase()) {
       case 'delivered':
         return 'bg-green-100 text-green-700 border-green-200';
       case 'shipped':
@@ -78,12 +56,16 @@ export class OrdersPage {
         return 'bg-orange-100 text-orange-700 border-orange-200';
       case 'pending':
         return 'bg-gray-100 text-gray-600 border-gray-200';
+      case 'cancelled':
+        return 'bg-red-100 text-red-700 border-red-200';
       default:
         return 'bg-gray-100 text-gray-600 border-gray-200';
     }
   }
 
-  formatDate(dateString: string): string {
+
+  formatDate(dateString: string | null): string {
+    if (!dateString) return '-';
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
@@ -91,18 +73,38 @@ export class OrdersPage {
     });
   }
 
-  getItemCount(items: string[]): string {
+
+  getItemCount(items: any[]): string {
     return items.length === 1 ? '1 item' : `${items.length} items`;
   }
+
+  getItemTitles(items: any[]): string {
+    if (!items || items.length === 0) return '';
+    return items.map((i: any) => i.eBookTitle).join(', ');
+  }
+
 
   viewOrder(orderId: string): void {
     console.log('View order:', orderId);
     // Navigate to order detail page
   }
 
+
   trackOrder(orderId: string): void {
     console.log('Track order:', orderId);
     // Open tracking modal or page
+  }
+
+  cancelOrder(orderId: string): void {
+    if (!confirm('Are you sure you want to cancel this order?')) return;
+    this.ordersService.cancelOrder(orderId).subscribe({
+      next: () => {
+        this.fetchOrders();
+      },
+      error: (err) => {
+        this.error.set('Failed to cancel order.');
+      }
+    });
   }
 
   browsBooks(): void {
