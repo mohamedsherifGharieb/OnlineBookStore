@@ -59,8 +59,20 @@
                     <td class="py-4 px-2 text-[#8b7355] hidden sm:table-cell">{{ formatDate(order.orderDate) }}</td>
                     <td class="py-4 px-2">
                       <div class="max-w-50">
-                        <p class="truncate text-[#5c3d2e]">{{ getItemTitles(order.items) }}</p>
-                        <p class="text-xs text-[#8b7355]">{{ getItemCount(order.items) }}</p>
+                        @if (isExpanded(order.id)) {
+                          <div class="flex flex-col gap-1">
+                            @for (line of getItemLines(order.items); track line) {
+                              <p class="text-sm text-[#5c3d2e]">{{ line }}</p>
+                            }
+                          </div>
+                          <button (click)="toggleExpanded(order.id)" class="text-xs text-[#8b7355] mt-1">Show less</button>
+                        } @else {
+                          <p class="truncate text-[#5c3d2e]">{{ getItemTitles(order.items) }}</p>
+                          <p class="text-xs text-[#8b7355]">{{ getItemCount(order.items) }}</p>
+                          @if (order.items.length > 1) {
+                            <button (click)="toggleExpanded(order.id)" class="text-xs cursor-pointer text-[#8b7355] mt-1">View more</button>
+                          }
+                        }
                       </div>
                     </td>
                     <td class="py-4 px-2 text-[#8b7355] hidden md:table-cell">{{ order.storeName }}</td>

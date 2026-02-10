@@ -12,22 +12,19 @@ export class OrderService {
   constructor(private http: HttpClient) {}
 
   getOrders(): Observable<Order[]> {
-    const userString = localStorage.getItem('user');
-    let headers = new HttpHeaders();
-    if (userString) {
-      try {
-        const user = JSON.parse(userString) as { token?: string };
-        if (user?.token) {
-          headers = headers.set('Authorization', `Bearer ${user.token}`);
-        }
-      } catch {
-      }
-    }
+    const headers = this.UserGetToken();
 
     return this.http.get<Order[]>(this.apiUrl, { headers });
   }
 
   cancelOrder(id: string): Observable<void> {
+    const headers = this.UserGetToken();
+
+    return this.http.delete<void>(`https://localhost:5002/api/order/${id}`, { headers });
+  }
+
+  
+  UserGetToken(): HttpHeaders {
     const userString = localStorage.getItem('user');
     let headers = new HttpHeaders();
     if (userString) {
@@ -38,7 +35,7 @@ export class OrderService {
         }
       } catch {}
     }
-
-    return this.http.delete<void>(`https://localhost:5002/api/order/${id}`, { headers });
+    return headers;
   }
 }
+

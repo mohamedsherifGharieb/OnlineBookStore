@@ -17,6 +17,7 @@ export class OrdersPage {
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
   private ordersService = inject(OrderService);
+  expanded = signal<Record<string, boolean>>({});
 
 
   constructor(private router: Router) {
@@ -41,7 +42,10 @@ export class OrdersPage {
 
   totalOrders = computed(() => this.orders().length);
   deliveredCount = computed(() => this.orders().filter(o => o.status?.toLowerCase() === 'delivered').length);
-  inProgressCount = computed(() => this.orders().filter(o => o.status?.toLowerCase() === 'shipped' || o.status?.toLowerCase() === 'processing').length);
+  inProgressCount = computed(() => this.orders().filter(o => {
+    const s = o.status?.toLowerCase();
+    return s === 'shipped' || s === 'processing' || s === 'pending';
+  }).length);
   cancelledCount = computed(() => this.orders().filter(o => o.status?.toLowerCase() === 'cancelled').length);
   completedCount = computed(() => this.orders().filter(o => o.status?.toLowerCase() === 'delivered').length);
 
@@ -80,7 +84,22 @@ export class OrdersPage {
 
   getItemTitles(items: any[]): string {
     if (!items || items.length === 0) return '';
-    return items.map((i: any) => i.eBookTitle).join(', ');
+    return items.map((i: any) => `${i.quantity}x ${i.eBookTitle}`).join(', ');
+  }
+
+  getItemLines(items: any[]): string[] {
+    if (!items || items.length === 0) return [];
+    return items.map((i: any) => `${i.quantity}x ${i.eBookTitle}`);
+  }
+
+  isExpanded(id: string): boolean {
+    return !!this.expanded()[id];
+  }
+
+  toggleExpanded(id: string): void {
+    const cur = { ...this.expanded() };
+    cur[id] = !cur[id];
+    this.expanded.set(cur);
   }
 
 
