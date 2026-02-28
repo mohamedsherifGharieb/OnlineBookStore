@@ -154,30 +154,6 @@ API base URL is configured in `account-service.ts`:
 baseUrl = "https://localhost:5002/api/";
 ```
 
-## 🤖 AI-Assisted Development
-
-This project demonstrates the power of AI-assisted development for educational purposes:
-
-### How AI Helped
-- **Code Generation** - Rapidly scaffolding components, services, and API endpoints
-- **Debugging** - Identifying and fixing errors quickly (e.g., Identity configuration issues)
-- **Best Practices** - Implementing reactive forms, proper validation, and clean architecture
-- **Learning** - Understanding concepts through real-time explanations and examples
-- **Productivity** - Reducing boilerplate code and focusing on business logic
-
-### Tools Used
-- **GitHub Copilot** - AI pair programmer in VS Code
-- **Claude** - For complex problem-solving and architecture decisions
-
-### Key Learnings
-1. **Type Safety** - Using TypeScript interfaces that mirror backend DTOs
-2. **Reactive Forms** - Real-time validation with visual feedback
-3. **JWT Authentication** - Secure token-based auth flow
-4. **Clean Architecture** - Separation of concerns between layers
-5. **Angular Signals** - Modern state management
-
-> 💡 **Tip for Students**: AI is a powerful learning accelerator, but always understand the code it generates. Use it to learn patterns, not to skip learning!
-
 ## 📝 License
 
 This project is for educational purposes.
